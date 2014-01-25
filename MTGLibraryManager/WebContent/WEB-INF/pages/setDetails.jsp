@@ -11,10 +11,10 @@
 <title>magiccards.info site</title>
 </head>
 <body>
-
 	<table>
 		<thead>
 			<tr>
+				<th>No</th>
 				<th>Card's name</th>
 				<th>Type</th>
 				<th>Mana</th>
@@ -24,6 +24,7 @@
 		<tbody>
 			<c:forEach var="card" items="${cards}">
 				<tr>
+					<td>${card.number}</td>
 					<td><a href='${card.url}' target="_blank">${card.name}</a></td>
 					<td>${card.type}</td>
 					<td>${card.mana}</td>

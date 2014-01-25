@@ -1,6 +1,6 @@
-package com.cyclops.library.mtg.bean;
+package com.cyclops.library.mtg.form.bean;
 
-public class MTGCardBean {
+public class MTGCardFormBean {
 
 	private String editionName;
 	private String editionAbbreviation;

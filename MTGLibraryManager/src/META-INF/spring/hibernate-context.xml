@@ -17,7 +17,7 @@
 		class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
 
 		<property name="persistenceXmlLocation" value="classpath*:META-INF/persistence.xml"></property>
-		<property name="persistenceUnitName" value="mtglibrarymanager_PU" />
+		<property name="persistenceUnitName" value="mtgLibraryManager_PU" />
 
 		<property name="jpaVendorAdapter">
 			<bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter">

@@ -15,9 +15,11 @@
         http://www.springframework.org/schema/tx/spring-tx-3.0.xsd">
 
 
-	<context:component-scan
-		base-package="com.cyclops.library.mtg.controller" />
-
+	<context:component-scan base-package="com.cyclops.library.mtg.controller" />
+	<context:component-scan base-package="com.cyclops.library.mtg.domain" />
+	<context:component-scan base-package="com.cyclops.library.mtg.repository" />
+	<context:component-scan base-package="com.cyclops.library.mtg.service" />
+	
 	<!-- Load Hibernate related configuration -->
 	<import resource="hibernate-context.xml" />
 

@@ -3,7 +3,7 @@
 <HTML>
 <HEAD>
 <title>Your Page Title</title>
-<meta http-equiv="REFRESH" content="0;url=myTravels.html" />
+<meta http-equiv="REFRESH" content="0;url=manageSets.html" />
 </HEAD>
 <BODY>Optional page text here.
 </BODY>

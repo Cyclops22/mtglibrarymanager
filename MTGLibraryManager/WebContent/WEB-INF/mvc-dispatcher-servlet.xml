@@ -9,12 +9,8 @@
 	<mvc:annotation-driven />
 	
 	<context:component-scan base-package="com.cyclops.library.mtg.controller" />
-
-	<context:component-scan
-		base-package="uk.ac.asif.akram.spring.web.form.tutorial_2.controller" />
-	<context:component-scan
-		base-package="uk.ac.asif.akram.spring.web.form.tutorial_2.service" />
-
+	<context:component-scan base-package="com.cyclops.library.mtg.service" />
+	
 	<context:annotation-config />
 
 	<bean
