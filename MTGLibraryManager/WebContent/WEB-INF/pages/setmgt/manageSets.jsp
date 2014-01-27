@@ -8,13 +8,16 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>magiccards.info site</title>
+<title>Sets management</title>
 </head>
 <body>
 
 	<a href="updateSetsFromTCGSite.html">Fetch sets from TCGPlayer site</a>
 
 	<form:form commandName="form" action="submitMTGSets.html">
+		<input type="submit" name="Retrieve" value="Retrieve" />
+		<input type="submit" name="Save" value="Save" />
+		
 		<table>
 			<thead>
 				<tr>
@@ -40,12 +43,10 @@
 						<td>${currSet.url}<form:hidden path="sets[${status.index}].url"/></td>
 						<td>${fn:length(currSet.cards)}</td>
 						<td><form:input path="sets[${status.index}].aliases"/></td>
+					</tr>
 				</c:forEach>
 			</tbody>
 		</table>
-		
-		<input type="submit" name="Update" value="Update" />
-		<input type="submit" name="Save" value="Save" />
 	</form:form>
 </body>
 </html>

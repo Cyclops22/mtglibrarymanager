@@ -1,42 +1,43 @@
-package com.cyclops.library.mtg.form.bean;
+package com.cyclops.library.mtg.domain;
 
-public class MTGCardFormBean {
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.validation.constraints.NotNull;
 
-	private String editionName;
-	private String editionAbbreviation;
-	private String language;
+@Entity
+public class CardBean {
+
+	@Id
+	@GeneratedValue
+	private int id;
+	
 	private String number;
+	
+	@NotNull
 	private String name;
+	
+	@NotNull
 	private String type;
+	
+	@NotNull
 	private String mana;
+	
+	@NotNull
 	private String rarity;
+	
 	private String url;
+	
 	private String imageUrl;
 	
-	public String getEditionName() {
-		return editionName;
+	public int getId() {
+		return id;
 	}
 
-	public void setEditionName(String editionName) {
-		this.editionName = editionName;
+	public void setId(int id) {
+		this.id = id;
 	}
 
-	public String getEditionAbbreviation() {
-		return editionAbbreviation;
-	}
-
-	public void setEditionAbbreviation(String editionAbbreviation) {
-		this.editionAbbreviation = editionAbbreviation;
-	}
-	
-	public String getLanguage() {
-		return language;
-	}
-
-	public void setLanguage(String language) {
-		this.language = language;
-	}
-	
 	public String getNumber() {
 		return number;
 	}

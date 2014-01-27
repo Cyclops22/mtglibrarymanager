@@ -8,8 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.cyclops.library.mtg.domain.MTGSetBean;
-import com.cyclops.library.mtg.form.bean.MTGSetFormBean;
+import com.cyclops.library.mtg.domain.SetBean;
 import com.cyclops.library.mtg.html.parsing.MagicCardsInfoParser;
 import com.cyclops.library.mtg.html.parsing.TCGPlayerParser;
 import com.cyclops.library.mtg.repository.MTGLibraryDAO;
@@ -25,26 +24,28 @@ public class MTGLibraryServiceImpl implements MTGLibraryService {
 		this.mtgLibraryDAO = mtgLibraryDAO;
 	}
 
-	public MTGLibraryServiceImpl() {
-
-	}
-	
-	public List<MTGSetBean> retrieveAllSets() throws IOException {
+	public List<SetBean> retrieveAllSets() throws IOException {
 		return new TCGPlayerParser().retrieveAllSets();
 	}
 	
-	public List<MTGSetFormBean> populateSets(List<MTGSetFormBean> mtgSetFormBeans) throws IOException {
-		return new MagicCardsInfoParser().retrieveSetsDetails(mtgSetFormBeans);
+	public List<SetBean> populateSets(List<SetBean> mtgSetBeans) throws IOException {
+		return new MagicCardsInfoParser().retrieveSetsDetails(mtgSetBeans);
 	}
 
 	@Override
 	@Transactional(propagation = Propagation.REQUIRED, readOnly = true)
-	public void addMTGSet(MTGSetBean mtgSetBean) {
+	public void addMTGSet(SetBean mtgSetBean) {
 		mtgLibraryDAO.create(mtgSetBean);
 	}
 
 	@Override
-	public List<MTGSetBean> findAll() {
+	public List<SetBean> findAll() {
 		return mtgLibraryDAO.findAll();
+	}
+
+	@Override
+	public void update(int id, SetBean mtgSetFormBean) {
+		// TODO Auto-generated method stub
+		
 	}
 }

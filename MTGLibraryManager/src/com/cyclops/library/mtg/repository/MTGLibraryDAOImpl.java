@@ -9,7 +9,7 @@ import javax.persistence.Query;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.cyclops.library.mtg.domain.MTGSetBean;
+import com.cyclops.library.mtg.domain.SetBean;
 
 @Repository("mtgLibraryDAO")
 @Transactional
@@ -26,15 +26,15 @@ public class MTGLibraryDAOImpl implements MTGLibraryDAO {
         this.em = em;
     }
     
-    public void create(MTGSetBean mtgSetBean){        
-        em.persist(mtgSetBean);
+    public void create(SetBean setBean){        
+        em.persist(setBean);
         return;         
     }
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<MTGSetBean> findAll() {
-		Query query = em.createQuery("SELECT s FROM MTGSetBean s");
+	public List<SetBean> findAll() {
+		Query query = em.createQuery("SELECT s FROM " + SetBean.class.getName() + " s");
 		return query.getResultList();
     }
     

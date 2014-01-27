@@ -5,7 +5,7 @@ import java.util.List;
 
 
 
-public class MTGSetFormBean {
+public class SetFormBean {
 
 	private int id;
 	private String name;
@@ -15,7 +15,7 @@ public class MTGSetFormBean {
 	private String url;
 	private String imageUrl;
 	
-	private List<MTGCardFormBean> cards = new ArrayList<>();
+	private List<CardFormBean> cards = new ArrayList<>();
 	
 	public int getId() {
 		return id;
@@ -73,11 +73,11 @@ public class MTGSetFormBean {
 		this.imageUrl = imageUrl;
 	}
 
-	public List<MTGCardFormBean> getCards() {
+	public List<CardFormBean> getCards() {
 		return cards;
 	}
 
-	public void setCards(List<MTGCardFormBean> cards) {
+	public void setCards(List<CardFormBean> cards) {
 		this.cards = cards;
 	}
 }

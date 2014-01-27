@@ -11,13 +11,13 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import com.cyclops.library.mtg.domain.MTGSetBean;
+import com.cyclops.library.mtg.domain.SetBean;
 
 public class TCGPlayerParser {
 
-	public List<MTGSetBean> retrieveAllSets() throws IOException {
-		MTGSetBean mtgSet = null;
-		List<MTGSetBean> mtgSets = new ArrayList<>();
+	public List<SetBean> retrieveAllSets() throws IOException {
+		SetBean mtgSet = null;
+		List<SetBean> mtgSets = new ArrayList<>();
 
 		Document doc = Jsoup.connect("http://magic.tcgplayer.com/all_magic_sets.asp").get();
 
@@ -29,7 +29,7 @@ public class TCGPlayerParser {
 			
 			switch (currElement.tagName()) {
 			case "img":
-				mtgSet = new MTGSetBean();
+				mtgSet = new SetBean();
 				
 				mtgSet.setImageUrl(currElement.attr("src"));
 				mtgSet.setLanguage(Locale.ENGLISH.getLanguage());

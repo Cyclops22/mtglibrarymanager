@@ -3,17 +3,18 @@ package com.cyclops.library.mtg.service;
 import java.io.IOException;
 import java.util.List;
 
-import com.cyclops.library.mtg.domain.MTGSetBean;
-import com.cyclops.library.mtg.form.bean.MTGSetFormBean;
+import com.cyclops.library.mtg.domain.SetBean;
 
 public interface MTGLibraryService {
 
-	public void addMTGSet(MTGSetBean mtgSetBean);
+	void addMTGSet(SetBean mtgSetBean);
 	
-	public List<MTGSetBean> findAll();
+	public List<SetBean> findAll();
 
-	List<MTGSetBean> retrieveAllSets() throws IOException;
+	List<SetBean> retrieveAllSets() throws IOException;
 
-	List<MTGSetFormBean> populateSets(List<MTGSetFormBean> mtgSetFormBeans) throws IOException;
+	List<SetBean> populateSets(List<SetBean> mtgSetBeans) throws IOException;
+	
+	public void update(int id, SetBean mtgSetBean);
 
 }

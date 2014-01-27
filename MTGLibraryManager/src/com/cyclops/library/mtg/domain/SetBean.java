@@ -1,22 +1,21 @@
 package com.cyclops.library.mtg.domain;
 
-import java.io.Serializable;
 import java.util.List;
 import java.util.Locale;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.validation.constraints.NotNull;
 
-@Entity
-public class MTGSetBean implements Serializable {
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 
-	private static final long serialVersionUID = -7808111240012138847L;
+@Entity
+public class SetBean {
 
 	@Id
 	@GeneratedValue
@@ -25,9 +24,9 @@ public class MTGSetBean implements Serializable {
 	@NotNull
 	private String name;
 	
-	@OneToMany(fetch = FetchType.EAGER, cascade = { CascadeType.ALL })
+	@OneToMany(cascade = { CascadeType.ALL })
 	@JoinColumn(name="set_id", referencedColumnName="id")
-//	@JoinTable(name = "aliasbean", joinColumns = @JoinColumn(name = "set_id"), inverseJoinColumns = @JoinColumn(name = "id"))
+	@LazyCollection(LazyCollectionOption.FALSE)
 	private List<AliasBean> aliases;
 	
 	private String abbreviation;
@@ -38,6 +37,11 @@ public class MTGSetBean implements Serializable {
 	private String url;
 	
 	private String imageUrl;
+	
+	@OneToMany(cascade = { CascadeType.ALL })
+	@JoinColumn(name="set_id")
+	@LazyCollection(LazyCollectionOption.FALSE)
+	private List<CardBean> cards;
 	
 	public int getId() {
 		return id;
@@ -94,8 +98,12 @@ public class MTGSetBean implements Serializable {
 	public void setImageUrl(String imageUrl) {
 		this.imageUrl = imageUrl;
 	}
+	
+	public List<CardBean> getCards() {
+		return cards;
+	}
 
-	public static long getSerialversionuid() {
-		return serialVersionUID;
+	public void setCards(List<CardBean> cards) {
+		this.cards = cards;
 	}
 }

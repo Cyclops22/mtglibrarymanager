@@ -2,12 +2,12 @@ package com.cyclops.library.mtg.repository;
 
 import java.util.List;
 
-import com.cyclops.library.mtg.domain.MTGSetBean;
+import com.cyclops.library.mtg.domain.SetBean;
 
 public interface MTGLibraryDAO {
 
-	void create(MTGSetBean mtgSetBean);
+	void create(SetBean mtgSetBean);
 	
-	public List<MTGSetBean> findAll();
+	public List<SetBean> findAll();
 
 }

@@ -9,14 +9,15 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import com.cyclops.library.mtg.form.bean.MTGCardFormBean;
-import com.cyclops.library.mtg.form.bean.MTGSetFormBean;
+import com.cyclops.library.mtg.domain.CardBean;
+import com.cyclops.library.mtg.domain.SetBean;
 
 public class MagicCardsInfoParser {
 	
@@ -27,10 +28,10 @@ public class MagicCardsInfoParser {
 	
 	private static final List<String> CARDS_TO_IGNORE = Arrays.asList("Plains", "Island", "Swamp", "Mountain", "Forest");
 	
-	private Map<String, MTGSetFormBean> formSetByName = new LinkedHashMap<>();
-	private Map<String, MTGSetFormBean> formSetByAlias = new LinkedHashMap<>();
+	private Map<String, SetBean> formSetByName = new LinkedHashMap<>();
+	private Map<String, SetBean> formSetByAlias = new LinkedHashMap<>();
 
-	public List<MTGSetFormBean> retrieveSetsDetails(List<MTGSetFormBean> sets) throws IOException {
+	public List<SetBean> retrieveSetsDetails(List<SetBean> sets) throws IOException {
 		initMaps(sets);
 		
 		Document sitemapDocument = Jsoup.connect("http://magiccards.info/sitemap.html").get();
@@ -44,16 +45,17 @@ public class MagicCardsInfoParser {
 		return new ArrayList<>(formSetByName.values());
 	}
 	
-	private void initMaps(List<MTGSetFormBean> sets) {
+	private void initMaps(List<SetBean> sets) {
 		formSetByName.clear();
 		formSetByAlias.clear();
 		
-		for (MTGSetFormBean currSet : sets) {
+		for (SetBean currSet : sets) {
 			formSetByName.put(currSet.getName(), currSet);
 			
-			String[] aliasArray = StringUtils.split(currSet.getAliases(), ',');
-			for (int i = 0; i < aliasArray.length; i++) {
-				formSetByAlias.put(aliasArray[i], currSet);
+//			String[] aliasArray = StringUtils.split(currSet.getAliases(), ',');
+			
+			for (int i = 0; i < CollectionUtils.size(currSet.getAliases()); i++) {
+				formSetByAlias.put(currSet.getAliases().get(i).getAlias(), currSet);
 			}
 		}
 	}
@@ -74,7 +76,7 @@ public class MagicCardsInfoParser {
 	}
 	
 	private void extractSets(Elements setElements) throws IOException {
-		MTGSetFormBean formSetBean = null;
+		SetBean formSetBean = null;
 		boolean processSet = true;
 		
 		for (int i = 0; i < setElements.size(); i++) {
@@ -86,7 +88,6 @@ public class MagicCardsInfoParser {
 				
 				formSetBean = getSetFormBean(setName);
 				if (formSetBean != null) {
-//					formSetBean.setName(setName);
 					formSetBean.setLanguage(StringUtils.defaultString(formSetBean.getLanguage(), DEFAULT_LANGUAGE));
 					formSetBean.setUrl(SITE_ROOT + currElement.attr("href"));
 				
@@ -102,8 +103,8 @@ public class MagicCardsInfoParser {
 		}
 	}
 	
-	private MTGSetFormBean getSetFormBean(String setName) {
-		MTGSetFormBean formSetBean = formSetByName.get(setName);
+	private SetBean getSetFormBean(String setName) {
+		SetBean formSetBean = formSetByName.get(setName);
 		if (formSetBean == null) {
 			formSetBean = formSetByAlias.get(setName);
 		}
@@ -116,7 +117,7 @@ public class MagicCardsInfoParser {
 		int fetchIdx = 0;
 		
 		for (String currSet : formSetByName.keySet()) {
-			List<MTGCardFormBean> cardsInSet = new ArrayList<>();
+			List<CardBean> cardsInSet = new ArrayList<>();
 			
 			if (StringUtils.isNotBlank(formSetByName.get(currSet).getUrl()))  {
 				Document doc = Jsoup.connect(formSetByName.get(currSet).getUrl()).get();
@@ -129,10 +130,10 @@ public class MagicCardsInfoParser {
 						String cardUrl = currCard.child(1).select("a").attr("href");
 						String[] cardUrlPart = StringUtils.split(currCard.child(1).select("a").attr("href"), '/');
 						
-						MTGCardFormBean cardBean = new MTGCardFormBean();
-						cardBean.setEditionName(currSet);
-						cardBean.setEditionAbbreviation(cardUrlPart[0]);
-						cardBean.setLanguage(cardUrlPart[1]);
+						String editionAbbreviation = cardUrlPart[0];
+						String language = cardUrlPart[1];
+						
+						CardBean cardBean = new CardBean();
 						
 						cardBean.setNumber(currCard.child(0).text());
 						cardBean.setName(cardName);
@@ -141,7 +142,7 @@ public class MagicCardsInfoParser {
 						cardBean.setRarity(currCard.child(4).text());
 						
 						cardBean.setUrl(SITE_ROOT + cardUrl);
-						cardBean.setImageUrl(MessageFormat.format(SCAN_ROOT_URL_TEMPLATE, cardBean.getLanguage(), cardBean.getEditionAbbreviation(), currCard.child(0).text()));
+						cardBean.setImageUrl(MessageFormat.format(SCAN_ROOT_URL_TEMPLATE, language, editionAbbreviation, currCard.child(0).text()));
 						
 						cardsInSet.add(cardBean);
 					}

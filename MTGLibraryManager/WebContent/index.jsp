@@ -3,8 +3,10 @@
 <HTML>
 <HEAD>
 <title>Your Page Title</title>
-<meta http-equiv="REFRESH" content="0;url=manageSets.html" />
 </HEAD>
-<BODY>Optional page text here.
+<BODY>
+	<a href="setmgt/manageSets.html">Manage sets</a>
+	<br>
+	<a href="librarymgt/manageLibraries.html">Manage libraries</a>
 </BODY>
 </HTML>

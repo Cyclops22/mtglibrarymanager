@@ -1,10 +1,8 @@
-package com.cyclops.library.mtg.bean;
+package com.cyclops.library.mtg.form.bean;
 
-public class MTGCardBean {
+public class CardFormBean {
 
-	private String editionName;
-	private String editionAbbreviation;
-	private String language;
+	private int id;
 	private String number;
 	private String name;
 	private String type;
@@ -13,30 +11,14 @@ public class MTGCardBean {
 	private String url;
 	private String imageUrl;
 	
-	public String getEditionName() {
-		return editionName;
+	public int getId() {
+		return id;
 	}
 
-	public void setEditionName(String editionName) {
-		this.editionName = editionName;
+	public void setId(int id) {
+		this.id = id;
 	}
 
-	public String getEditionAbbreviation() {
-		return editionAbbreviation;
-	}
-
-	public void setEditionAbbreviation(String editionAbbreviation) {
-		this.editionAbbreviation = editionAbbreviation;
-	}
-	
-	public String getLanguage() {
-		return language;
-	}
-
-	public void setLanguage(String language) {
-		this.language = language;
-	}
-	
 	public String getNumber() {
 		return number;
 	}
