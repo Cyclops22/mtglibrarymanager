@@ -21,26 +21,26 @@ import com.cyclops.library.mtg.form.mapper.LibraryFormBeanMapper;
 import com.cyclops.library.mtg.form.mapper.LibrarySetFormBeanMapper;
 import com.cyclops.library.mtg.form.mapper.SetFormBeanMapper;
 import com.cyclops.library.mtg.service.LibraryMgtService;
-import com.cyclops.library.mtg.service.MTGLibraryService;
+import com.cyclops.library.mtg.service.SetMgtService;
 
 @Controller
 public class LibraryManagementController {
 	
 	private LibraryMgtService libraryMgtService;
-	private MTGLibraryService mtgLibraryService;
+	private SetMgtService mtgLibraryService;
 	
 	private LibraryFormBeanMapper libraryBeanMapper = new LibraryFormBeanMapper();
 	private SetFormBeanMapper setBeanMapper = new SetFormBeanMapper();
 	private LibrarySetFormBeanMapper librarySetBeanMapper = new LibrarySetFormBeanMapper();
 	
 	@Autowired
-	public LibraryManagementController(LibraryMgtService libraryMgtService, MTGLibraryService mtgLibraryService) {
+	public LibraryManagementController(LibraryMgtService libraryMgtService, SetMgtService mtgLibraryService) {
 		this.libraryMgtService = libraryMgtService;
 		this.mtgLibraryService = mtgLibraryService;
 	}
 
 	@RequestMapping(value = "/librarymgt/manageLibraries", method = RequestMethod.GET)
-	public String displayLibraries(Model model) {
+	public String displayLibrariesNavigation(Model model) {
 		
 		LibrariesForm librariesForm = new LibrariesForm();
 		librariesForm.setLibraries(libraryBeanMapper.toFormBean(libraryMgtService.findAllLibraries()));
@@ -78,7 +78,7 @@ public class LibraryManagementController {
 	}
 	
 	@RequestMapping(value = "/librarymgt/{libraryId}/editLibrary", method = RequestMethod.GET)
-	public String editLibrary(@PathVariable("libraryId") String libraryId, Model model) {
+	public String editLibraryNavigation(@PathVariable("libraryId") String libraryId, Model model) {
 		
 		LibraryFormBean form = libraryBeanMapper.toFormBean(libraryMgtService.findLibraryById(Integer.parseInt(libraryId)));
 		
@@ -89,15 +89,22 @@ public class LibraryManagementController {
 	
 	@RequestMapping(value = "/librarymgt/{libraryId}/submitEditLibrary", params = "AddSets", method = RequestMethod.POST)
 	public String addSetsNavigation(@PathVariable("libraryId") String libraryId, @ModelAttribute("form") LibraryFormBean form, BindingResult result, Model model) {
+		List<String> usedSets = new ArrayList<>();
 		List<LibrarySetFormBean> availableSets = new ArrayList<>();
 		
-		for (SetBean currSetBean : mtgLibraryService.findAll()) {
-			LibrarySetFormBean lsfb = new LibrarySetFormBean();
-			
-			lsfb.setReferencedSet(setBeanMapper.toFormBean(currSetBean));
-			availableSets.add(lsfb);
+		List<LibrarySetFormBean> setsInLibrary = librarySetBeanMapper.toFormBean(libraryMgtService.findLibraryById(Integer.parseInt(libraryId)).getSets());
+		for (LibrarySetFormBean currLibrarySetFormBean : setsInLibrary) {
+			usedSets.add(currLibrarySetFormBean.getReferencedSet().getName());
 		}
 		
+		for (SetBean currSetBean : mtgLibraryService.findAll()) {
+			if (!usedSets.contains(currSetBean.getName())) {
+				LibrarySetFormBean lsfb = new LibrarySetFormBean();
+				
+				lsfb.setReferencedSet(setBeanMapper.toFormBean(currSetBean));
+				availableSets.add(lsfb);
+			}
+		}
 		
 		form.setSets(availableSets);
 		
@@ -127,11 +134,8 @@ public class LibraryManagementController {
 		
 		for (LibrarySetFormBean currLibrarySetFormBean : form.getSets()) {
 			if (currLibrarySetFormBean.isSelected()) {
-				System.out.println("Adding set having id " + currLibrarySetFormBean.getReferencedSet().getId() + " to library");
-				
 				libraryMgtService.addSetToLibrary(Integer.valueOf(libraryId), Integer.valueOf(currLibrarySetFormBean.getReferencedSet().getId()));
 			}
-			
 		}
 		
 		model.addAttribute("form", form);
@@ -140,7 +144,7 @@ public class LibraryManagementController {
 	}
 	
 	@RequestMapping(value = "/librarymgt/{libraryId}/{librarySetId}/editSetLibrary", method = RequestMethod.GET)
-	public String editSetLibrary(@PathVariable("libraryId") String libraryId, @PathVariable("librarySetId") String librarySetId, Model model) {
+	public String editSetLibraryNavigation(@PathVariable("libraryId") String libraryId, @PathVariable("librarySetId") String librarySetId, Model model) {
 		
 		LibrarySetFormBean form = librarySetBeanMapper.toFormBean(libraryMgtService.findLibrarySetById(Integer.parseInt(librarySetId)));
 		

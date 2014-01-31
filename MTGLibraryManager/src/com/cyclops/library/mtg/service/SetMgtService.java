@@ -5,7 +5,7 @@ import java.util.List;
 
 import com.cyclops.library.mtg.domain.SetBean;
 
-public interface MTGLibraryService {
+public interface SetMgtService {
 
 	void addMTGSet(SetBean mtgSetBean);
 	

@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.cyclops.library.mtg.domain.SetBean;
 
-public interface MTGLibraryDAO {
+public interface SetMgtDAO {
 
 	void create(SetBean mtgSetBean);
 	

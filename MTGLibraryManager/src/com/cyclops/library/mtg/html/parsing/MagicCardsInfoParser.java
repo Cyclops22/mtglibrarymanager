@@ -52,8 +52,6 @@ public class MagicCardsInfoParser {
 		for (SetBean currSet : sets) {
 			formSetByName.put(currSet.getName(), currSet);
 			
-//			String[] aliasArray = StringUtils.split(currSet.getAliases(), ',');
-			
 			for (int i = 0; i < CollectionUtils.size(currSet.getAliases()); i++) {
 				formSetByAlias.put(currSet.getAliases().get(i).getAlias(), currSet);
 			}
@@ -76,7 +74,7 @@ public class MagicCardsInfoParser {
 	}
 	
 	private void extractSets(Elements setElements) throws IOException {
-		SetBean formSetBean = null;
+		SetBean setBean = null;
 		boolean processSet = true;
 		
 		for (int i = 0; i < setElements.size(); i++) {
@@ -86,10 +84,10 @@ public class MagicCardsInfoParser {
 				processSet = true;
 				String setName = currElement.text();
 				
-				formSetBean = getSetFormBean(setName);
-				if (formSetBean != null) {
-					formSetBean.setLanguage(StringUtils.defaultString(formSetBean.getLanguage(), DEFAULT_LANGUAGE));
-					formSetBean.setUrl(SITE_ROOT + currElement.attr("href"));
+				setBean = getSetBean(setName);
+				if (setBean != null) {
+					setBean.setLanguage(StringUtils.defaultString(setBean.getLanguage(), DEFAULT_LANGUAGE));
+					setBean.setUrl(SITE_ROOT + currElement.attr("href"));
 				
 				} else {
 					processSet = false;
@@ -97,19 +95,19 @@ public class MagicCardsInfoParser {
 				}
 			} else {
 				if (processSet) {
-					formSetBean.setAbbreviation(currElement.text());
+					setBean.setAbbreviation(currElement.text());
 				}
 			}
 		}
 	}
 	
-	private SetBean getSetFormBean(String setName) {
-		SetBean formSetBean = formSetByName.get(setName);
-		if (formSetBean == null) {
-			formSetBean = formSetByAlias.get(setName);
+	private SetBean getSetBean(String setName) {
+		SetBean setBean = formSetByName.get(setName);
+		if (setBean == null) {
+			setBean = formSetByAlias.get(setName);
 		}
 		
-		return formSetBean;
+		return setBean;
 	}
 	
 	private void extractExpansionCards() throws IOException {

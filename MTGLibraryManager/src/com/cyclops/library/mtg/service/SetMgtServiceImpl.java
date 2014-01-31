@@ -11,16 +11,16 @@ import org.springframework.transaction.annotation.Transactional;
 import com.cyclops.library.mtg.domain.SetBean;
 import com.cyclops.library.mtg.html.parsing.MagicCardsInfoParser;
 import com.cyclops.library.mtg.html.parsing.TCGPlayerParser;
-import com.cyclops.library.mtg.repository.MTGLibraryDAO;
+import com.cyclops.library.mtg.repository.SetMgtDAO;
 
-@Service("mtgLibraryService")
+@Service("setMgtService")
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-public class MTGLibraryServiceImpl implements MTGLibraryService {
+public class SetMgtServiceImpl implements SetMgtService {
 
-	private MTGLibraryDAO mtgLibraryDAO;
+	private SetMgtDAO mtgLibraryDAO;
 
 	@Autowired
-	public MTGLibraryServiceImpl(MTGLibraryDAO mtgLibraryDAO) {
+	public SetMgtServiceImpl(SetMgtDAO mtgLibraryDAO) {
 		this.mtgLibraryDAO = mtgLibraryDAO;
 	}
 

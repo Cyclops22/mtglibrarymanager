@@ -14,10 +14,49 @@
 
 	<a href="updateSetsFromTCGSite.html">Fetch sets from TCGPlayer site</a>
 
-	<form:form commandName="form" action="submitMTGSets.html">
+	<form:form commandName="newSetsForm" action="submitMTGSets.html">
 		<input type="submit" name="Retrieve" value="Retrieve" />
 		<input type="submit" name="Save" value="Save" />
 		
+		<h1>New sets</h1>
+		<table>
+			<thead>
+				<tr>
+					<th>Set</th>
+					<th>&nbsp;</th>
+					<th>&nbsp;</th>
+					<th>Url</th>
+					<th>Number of cards</th>
+					<th>Release date</th>
+					<th>Aliases</th>
+				</tr>
+			</thead>
+			<tbody>
+				<c:forEach var="currNewSet" items="${newSetsForm.sets}" varStatus="status">
+					<tr>
+						<td>
+							<form:hidden path="sets[${status.index}].id"/>
+							<form:hidden path="sets[${status.index}].language"/>
+							<form:hidden path="sets[${status.index}].name"/>
+							<form:hidden path="sets[${status.index}].abbreviation"/>
+							<form:hidden path="sets[${status.index}].releaseDate"/>
+							<form:hidden path="sets[${status.index}].url"/>
+							<form:hidden path="sets[${status.index}].imageUrl"/>
+							
+							<a href='<c:out value="${currNewSet.name}"/>/displaySet.html'><c:out value="${currNewSet.name}"/></a>
+						</td>
+						<td>${currNewSet.abbreviation}</td>
+						<td><img src="${currNewSet.imageUrl}"></td>
+						<td>${currNewSet.url}</td>
+						<td>${fn:length(currNewSet.cards)}</td>
+						<td>${currNewSet.releaseDate}</td>
+						<td><form:input path="sets[${status.index}].aliases"/></td>
+					</tr>
+				</c:forEach>
+			</tbody>
+		</table>
+		
+		<!--
 		<table>
 			<thead>
 				<tr>
@@ -30,23 +69,52 @@
 				</tr>
 			</thead>
 			<tbody>
-				<c:forEach var="currSet" items="${form.sets}" varStatus="status">
+				<c:forEach var="currNewSet" items="${newSetsForm.sets}" varStatus="status">
 					<tr>
 						<td>
 							<form:hidden path="sets[${status.index}].id"/>
 							<form:hidden path="sets[${status.index}].language"/>
-							<a href='<c:out value="${currSet.name}"/>/displaySet.html'><c:out value="${currSet.name}"/></a>
+							<a href='<c:out value="${currNewSet.name}"/>/displaySet.html'><c:out value="${currNewSet.name}"/></a>
 							<form:hidden path="sets[${status.index}].name"/>
 						</td>
-						<td>${currSet.abbreviation}<form:hidden path="sets[${status.index}].abbreviation"/></td>
-						<td><img src="${currSet.imageUrl}"><form:hidden path="sets[${status.index}].imageUrl"/></td>
-						<td>${currSet.url}<form:hidden path="sets[${status.index}].url"/></td>
-						<td>${fn:length(currSet.cards)}</td>
+						<td>${currNewSet.abbreviation}<form:hidden path="sets[${status.index}].abbreviation"/></td>
+						<td><img src="${currNewSet.imageUrl}"><form:hidden path="sets[${status.index}].imageUrl"/></td>
+						<td>${currNewSet.url}<form:hidden path="sets[${status.index}].url"/></td>
+						<td>${fn:length(currNewSet.cards)}</td>
 						<td><form:input path="sets[${status.index}].aliases"/></td>
 					</tr>
 				</c:forEach>
 			</tbody>
 		</table>
+		-->
 	</form:form>
+	
+	<h1>Sets</h1>
+	<table>
+		<thead>
+			<tr>
+				<th>Set</th>
+				<th>&nbsp;</th>
+				<th>&nbsp;</th>
+				<th>Url</th>
+				<th>Number of cards</th>
+				<th>Aliases</th>
+			</tr>
+		</thead>
+		<tbody>
+			<c:forEach var="currSet" items="${form.sets}" varStatus="status">
+				<tr>
+					<td>
+						<a href='<c:out value="${currSet.name}"/>/displaySet.html'><c:out value="${currSet.name}"/></a>
+					</td>
+					<td>${currSet.abbreviation}</td>
+					<td><img src="${currSet.imageUrl}"></td>
+					<td>${currSet.url}</td>
+					<td>${fn:length(currSet.cards)}</td>
+					<td>${currSet.aliases}</td>
+				</tr>
+			</c:forEach>
+		</tbody>
+	</table>
 </body>
 </html>

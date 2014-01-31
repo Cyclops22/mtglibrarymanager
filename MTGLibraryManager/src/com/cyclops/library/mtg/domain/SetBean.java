@@ -1,5 +1,6 @@
 package com.cyclops.library.mtg.domain;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -9,6 +10,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 
 import org.hibernate.annotations.LazyCollection;
@@ -24,7 +27,7 @@ public class SetBean {
 	@NotNull
 	private String name;
 	
-	@OneToMany(cascade = { CascadeType.ALL })
+	@OneToMany(cascade = { CascadeType.ALL }, orphanRemoval = true)
 	@JoinColumn(name="set_id", referencedColumnName="id")
 	@LazyCollection(LazyCollectionOption.FALSE)
 	private List<AliasBean> aliases;
@@ -36,9 +39,12 @@ public class SetBean {
 	
 	private String url;
 	
-	private String imageUrl;
+	private String logoUrl;
 	
-	@OneToMany(cascade = { CascadeType.ALL })
+	@Temporal(TemporalType.DATE)
+	private Date releaseDate;
+	
+	@OneToMany(cascade = { CascadeType.ALL }, orphanRemoval = true)
 	@JoinColumn(name="set_id")
 	@LazyCollection(LazyCollectionOption.FALSE)
 	private List<CardBean> cards;
@@ -91,12 +97,12 @@ public class SetBean {
 		this.url = url;
 	}
 
-	public String getImageUrl() {
-		return imageUrl;
+	public String getLogoUrl() {
+		return logoUrl;
 	}
 
-	public void setImageUrl(String imageUrl) {
-		this.imageUrl = imageUrl;
+	public void setLogoUrl(String logoUrl) {
+		this.logoUrl = logoUrl;
 	}
 	
 	public List<CardBean> getCards() {
@@ -105,5 +111,13 @@ public class SetBean {
 
 	public void setCards(List<CardBean> cards) {
 		this.cards = cards;
+	}
+
+	public Date getReleaseDate() {
+		return releaseDate;
+	}
+
+	public void setReleaseDate(Date releaseDate) {
+		this.releaseDate = releaseDate;
 	}
 }

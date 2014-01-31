@@ -1,7 +1,10 @@
 package com.cyclops.library.mtg.controller;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,41 +21,67 @@ import com.cyclops.library.mtg.form.SetsForm;
 import com.cyclops.library.mtg.form.bean.SetFormBean;
 import com.cyclops.library.mtg.form.mapper.CardFormBeanMapper;
 import com.cyclops.library.mtg.form.mapper.SetFormBeanMapper;
-import com.cyclops.library.mtg.service.MTGLibraryService;
+import com.cyclops.library.mtg.html.parsing.WizardsParser;
+import com.cyclops.library.mtg.service.SetMgtService;
 
 @Controller
 public class ManageSetsController {
 	
-	private MTGLibraryService mtgLibraryService;
+	private SetMgtService setMgtService;
 	
 	private SetsForm workForm;
 	private Map<String, SetFormBean> setFormBeanBySetName = new LinkedHashMap<>();
 	
 	@Autowired
-	public ManageSetsController(MTGLibraryService mtgLibraryService) {
-		this.mtgLibraryService = mtgLibraryService;
+	public ManageSetsController(SetMgtService mtgLibraryService) {
+		this.setMgtService = mtgLibraryService;
 	}
 
 	@RequestMapping(value = "/setmgt/manageSets", method = RequestMethod.GET)
 	public String displaySets(Model model) {
 		
 		workForm = new SetsForm();
-		workForm.setSets(new SetFormBeanMapper().toFormBean(getMtgLibraryService().findAll()));
+		workForm.setSets(new SetFormBeanMapper().toFormBean(setMgtService.findAll()));
 		
 		model.addAttribute("form", workForm);
+		model.addAttribute("newSetsForm", new SetsForm());
+		
+		return "setmgt/manageSets";
+	}
+	
+	@RequestMapping(value = "/setmgt/test", method = RequestMethod.GET)
+	public String test(Model model) throws IOException {
+		
+		workForm = new SetsForm();
+		workForm.setSets(new SetFormBeanMapper().toFormBean(new WizardsParser().retrieveSetsDetails(setMgtService.retrieveAllSets())));
+		
+		model.addAttribute("form", new SetsForm());
+		model.addAttribute("newSetsForm", workForm);
 		
 		return "setmgt/manageSets";
 	}
 	
 	@RequestMapping(value = "/setmgt/updateSetsFromTCGSite", method = RequestMethod.GET)
 	public String scanSite(Model model) {
+		List<String> persistedSets = new ArrayList<>();
+		SetsForm newSetsForm = new SetsForm();
 		
-		workForm = new SetsForm();
+		for (SetFormBean currSet : workForm.getSets()) {
+			persistedSets.add(currSet.getName());
+		}
 		
 		try {
-			workForm.setSets(new SetFormBeanMapper().toFormBean(getMtgLibraryService().retrieveAllSets()));
+			newSetsForm.setSets(new SetFormBeanMapper().toFormBean(setMgtService.retrieveAllSets()));
+			for (Iterator<SetFormBean> iter = newSetsForm.getSets().iterator(); iter.hasNext(); ) {
+				SetFormBean currSetFormBean = iter.next();
+				
+				if (persistedSets.contains(currSetFormBean.getName())) {
+					iter.remove();
+				}
+			}
 			
 			model.addAttribute("form", workForm);
+			model.addAttribute("newSetsForm", newSetsForm);
 			
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -75,42 +104,33 @@ public class ManageSetsController {
 	}
 	
 	@RequestMapping(value = "/setmgt/submitMTGSets", params = "Retrieve", method = RequestMethod.POST)
-	public String editMTGSets(@ModelAttribute("form") SetsForm form, BindingResult result, Model model) throws IOException {
+	public String editMTGSets(@ModelAttribute("newSetsForm") SetsForm newSetsForm, BindingResult result, Model model) throws IOException {
 		SetFormBeanMapper beanMapper = new SetFormBeanMapper();
 		
-		form.setSets(beanMapper.toFormBean(getMtgLibraryService().populateSets(beanMapper.toBean(form.getSets()))));
+		newSetsForm.setSets(beanMapper.toFormBean(setMgtService.populateSets(beanMapper.toBean(newSetsForm.getSets()))));
 		
 		setFormBeanBySetName.clear();
-		for (SetFormBean currSetFormBean : form.getSets()) {
+		for (SetFormBean currSetFormBean : newSetsForm.getSets()) {
 			setFormBeanBySetName.put(currSetFormBean.getName(), currSetFormBean);
 		}
 		
-		model.addAttribute("form", form);
-		
-		this.workForm = form;
+		model.addAttribute("form", workForm);
+		model.addAttribute("newSetsForm", newSetsForm);
 		
 		return "setmgt/manageSets";
 	}
 	
 	@RequestMapping(value = "/setmgt/submitMTGSets", params = "Save", method = RequestMethod.POST)
-	public String saveMTGSets(@ModelAttribute("form") SetsForm form, BindingResult result, Model model) {
+	public String saveMTGSets(@ModelAttribute("newSetsForm") SetsForm newSetsForm, BindingResult result, Model model) {
 		SetFormBeanMapper mtgSetFormBeanMapper = new SetFormBeanMapper();
 		CardFormBeanMapper mtgCardFormBeanMapper = new CardFormBeanMapper();
 		
-		for (SetBean currSet : mtgSetFormBeanMapper.toBean(form.getSets())) {
+		for (SetBean currSet : mtgSetFormBeanMapper.toBean(newSetsForm.getSets())) {
 			currSet.getCards().addAll(mtgCardFormBeanMapper.toBean(setFormBeanBySetName.get(currSet.getName()).getCards()));
 			
-			getMtgLibraryService().addMTGSet(currSet);
+			setMgtService.addMTGSet(currSet);
 		}
 		
-		this.workForm.setSets(new SetFormBeanMapper().toFormBean(getMtgLibraryService().findAll()));
-		
-		model.addAttribute("form", this.workForm);
-		
-		return "setmgt/manageSets";
-	}
-	
-	public MTGLibraryService getMtgLibraryService() {
-		return mtgLibraryService;
+		return "redirect:/setmgt/manageSets.html";
 	}
 }

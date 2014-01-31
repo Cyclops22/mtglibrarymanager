@@ -11,9 +11,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.cyclops.library.mtg.domain.SetBean;
 
-@Repository("mtgLibraryDAO")
+@Repository("setMgtDAO")
 @Transactional
-public class MTGLibraryDAOImpl implements MTGLibraryDAO {
+public class SetMgtDAOImpl implements SetMgtDAO {
 
 	private EntityManager em;
 	 
@@ -26,7 +26,7 @@ public class MTGLibraryDAOImpl implements MTGLibraryDAO {
         this.em = em;
     }
     
-    public void create(SetBean setBean){        
+    public void create(SetBean setBean) {        
         em.persist(setBean);
         return;         
     }

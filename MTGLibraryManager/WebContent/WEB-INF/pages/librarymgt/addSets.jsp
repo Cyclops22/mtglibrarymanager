@@ -13,6 +13,7 @@
 	
 	<form:form commandName="form" action="addSets.html">
 		<input type="submit" value="Save" />
+		<input type="button" value="Cancel" onclick="location.href='editLibrary.html'"/>
 		
 		<table>
 			<thead>

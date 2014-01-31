@@ -12,6 +12,7 @@
 <body>
 	<form:form commandName="form" action="submitSetLibrary.html">
 		<input type="submit" value="Save" />
+		<input type="button" value="Cancel" onclick="location.href='../editLibrary.html'" />
 		
 		<form:hidden path="id" />
 		
@@ -31,12 +32,16 @@
 					<tr>
 						<td>
 							<form:hidden path="cards[${status.index}].id"/>
-							<c:out value="${currCard.id}"/>
+							<c:out value="${currCard.referencedCard.number}"/>
 						</td>
 						<td>
 							<form:hidden path="cards[${status.index}].referencedCard.id"/>
 							<form:hidden path="cards[${status.index}].referencedCard.name"/>
-							<c:out value="${currCard.referencedCard.name}"/>
+							<a href="<c:out value='${currCard.referencedCard.url}'/>" target="_blank">
+								<c:out value="${currCard.referencedCard.name}"/>
+							</a>
+							
+							
 						</td>
 						<td><input type="button" value="-" onclick="removeQty(${currCard.id});"/><form:input path="cards[${status.index}].quantity" id="Qty${currCard.id}"/><input type="button" value="+" onclick="addQty(${currCard.id});"/></td>
 						<td><input type="button" value="-" onclick="removeFoilQty(${currCard.id});"/><form:input path="cards[${status.index}].foilQuantity" id="FoilQty${currCard.id}"/><input type="button" value="+" onclick="addFoilQty(${currCard.id});"/></td>

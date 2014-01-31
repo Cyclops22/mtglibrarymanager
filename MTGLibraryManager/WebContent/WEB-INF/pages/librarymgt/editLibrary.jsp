@@ -14,6 +14,7 @@
 	<form:form commandName="form" action="submitEditLibrary.html">
 		<input type="submit" name="AddSets" value="Add sets"/>
 		<input type="submit" name="RemoveSelected" value="Remove selected"/>
+		<input type="button" value="Back" onclick="location.href='../manageLibraries.html'"/>
 
 		<table>
 			<thead>

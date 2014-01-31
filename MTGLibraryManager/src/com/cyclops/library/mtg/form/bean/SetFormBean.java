@@ -14,6 +14,7 @@ public class SetFormBean {
 	private String language;
 	private String url;
 	private String imageUrl;
+	private String releaseDate;
 	
 	private List<CardFormBean> cards = new ArrayList<>();
 	
@@ -71,6 +72,14 @@ public class SetFormBean {
 
 	public void setImageUrl(String imageUrl) {
 		this.imageUrl = imageUrl;
+	}
+	
+	public String getReleaseDate() {
+		return releaseDate;
+	}
+
+	public void setReleaseDate(String releaseDate) {
+		this.releaseDate = releaseDate;
 	}
 
 	public List<CardFormBean> getCards() {
