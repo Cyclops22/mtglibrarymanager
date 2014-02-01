@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.cyclops.library.mtg.domain.SetBean;
 import com.cyclops.library.mtg.html.parsing.MagicCardsInfoParser;
 import com.cyclops.library.mtg.html.parsing.TCGPlayerParser;
+import com.cyclops.library.mtg.html.parsing.WizardsParser;
 import com.cyclops.library.mtg.repository.SetMgtDAO;
 
 @Service("setMgtService")
@@ -18,6 +19,10 @@ import com.cyclops.library.mtg.repository.SetMgtDAO;
 public class SetMgtServiceImpl implements SetMgtService {
 
 	private SetMgtDAO mtgLibraryDAO;
+	
+	private TCGPlayerParser tcgPlayerParser = new TCGPlayerParser();
+	private MagicCardsInfoParser magicCardsInfoParser = new MagicCardsInfoParser();
+	private WizardsParser wizardsParser = new WizardsParser();
 
 	@Autowired
 	public SetMgtServiceImpl(SetMgtDAO mtgLibraryDAO) {
@@ -25,11 +30,17 @@ public class SetMgtServiceImpl implements SetMgtService {
 	}
 
 	public List<SetBean> retrieveAllSets() throws IOException {
-		return new TCGPlayerParser().retrieveAllSets();
+		List<SetBean> allSets = tcgPlayerParser.retrieveAllSets();
+		allSets = wizardsParser.retrieveSetsDetails(allSets);
+		
+		return allSets;
 	}
 	
 	public List<SetBean> populateSets(List<SetBean> mtgSetBeans) throws IOException {
-		return new MagicCardsInfoParser().retrieveSetsDetails(mtgSetBeans);
+		List<SetBean> allSets = magicCardsInfoParser.retrieveSetsDetails(mtgSetBeans);
+		allSets = wizardsParser.retrieveSetsDetails(allSets);
+		
+		return allSets;
 	}
 
 	@Override

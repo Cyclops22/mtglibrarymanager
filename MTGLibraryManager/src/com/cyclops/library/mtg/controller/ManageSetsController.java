@@ -21,7 +21,6 @@ import com.cyclops.library.mtg.form.SetsForm;
 import com.cyclops.library.mtg.form.bean.SetFormBean;
 import com.cyclops.library.mtg.form.mapper.CardFormBeanMapper;
 import com.cyclops.library.mtg.form.mapper.SetFormBeanMapper;
-import com.cyclops.library.mtg.html.parsing.WizardsParser;
 import com.cyclops.library.mtg.service.SetMgtService;
 
 @Controller
@@ -49,19 +48,36 @@ public class ManageSetsController {
 		return "setmgt/manageSets";
 	}
 	
-	@RequestMapping(value = "/setmgt/test", method = RequestMethod.GET)
-	public String test(Model model) throws IOException {
+	@RequestMapping(value = "/setmgt/retrieveNewSets", method = RequestMethod.GET)
+	public String retrieveNewSets(Model model) {
+		List<String> persistedSets = new ArrayList<>();
+		SetsForm newSetsForm = new SetsForm();
 		
-		workForm = new SetsForm();
-		workForm.setSets(new SetFormBeanMapper().toFormBean(new WizardsParser().retrieveSetsDetails(setMgtService.retrieveAllSets())));
+		for (SetFormBean currSet : workForm.getSets()) {
+			persistedSets.add(currSet.getName());
+		}
 		
-		model.addAttribute("form", new SetsForm());
-		model.addAttribute("newSetsForm", workForm);
+		try {
+			newSetsForm.setSets(new SetFormBeanMapper().toFormBean(setMgtService.retrieveAllSets()));
+			for (Iterator<SetFormBean> iter = newSetsForm.getSets().iterator(); iter.hasNext(); ) {
+				SetFormBean currSetFormBean = iter.next();
+				
+				if (persistedSets.contains(currSetFormBean.getName())) {
+					iter.remove();
+				}
+			}
+			
+			model.addAttribute("form", workForm);
+			model.addAttribute("newSetsForm", newSetsForm);
+			
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 		
 		return "setmgt/manageSets";
 	}
 	
-	@RequestMapping(value = "/setmgt/updateSetsFromTCGSite", method = RequestMethod.GET)
+	@RequestMapping(value = "/setmgt/retrieveSets", method = RequestMethod.GET)
 	public String scanSite(Model model) {
 		List<String> persistedSets = new ArrayList<>();
 		SetsForm newSetsForm = new SetsForm();

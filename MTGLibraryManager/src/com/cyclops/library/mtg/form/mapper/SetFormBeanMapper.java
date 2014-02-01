@@ -8,10 +8,8 @@ import java.util.List;
 import java.util.Locale;
 
 import org.apache.commons.collections4.CollectionUtils;
-import org.apache.commons.lang.time.DateUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.text.StrBuilder;
-import org.apache.commons.lang3.time.DateFormatUtils;
 
 import com.cyclops.library.mtg.domain.AliasBean;
 import com.cyclops.library.mtg.domain.SetBean;
@@ -51,7 +49,7 @@ public class SetFormBeanMapper extends AbstractFormBeanMapper<SetBean, SetFormBe
 			
 			for (int i = 0; i < aliasesArray.length; i++) {
 				AliasBean aliasBean = new AliasBean();
-				aliasBean.setAlias(aliasesArray[i]);
+				aliasBean.setAlias(StringUtils.trim(aliasesArray[i]));
 				
 				aliasBeans.add(aliasBean);
 			}
@@ -87,8 +85,8 @@ public class SetFormBeanMapper extends AbstractFormBeanMapper<SetBean, SetFormBe
 			
 			
 			for (int i = 0; i < CollectionUtils.size(bean.getAliases()); i++) {
-				strBuilder.append(bean.getAliases().get(i).getAlias());
 				strBuilder.appendSeparator(", ", i);
+				strBuilder.append(bean.getAliases().get(i).getAlias());
 			}
 			
 			setForm.setAliases(strBuilder.toString());

@@ -12,11 +12,11 @@
 </head>
 <body>
 
-	<a href="updateSetsFromTCGSite.html">Fetch sets from TCGPlayer site</a>
+	<a href="retrieveSets.html">Retrieve sets</a>
 
 	<form:form commandName="newSetsForm" action="submitMTGSets.html">
-		<input type="submit" name="Retrieve" value="Retrieve" />
-		<input type="submit" name="Save" value="Save" />
+		<input type="submit" name="Retrieve" value="Retrieve sets details" />
+		<input type="submit" name="Save" value="Save sets" />
 		
 		<h1>New sets</h1>
 		<table>

@@ -8,7 +8,5 @@
 	<a href="setmgt/manageSets.html">Manage sets</a>
 	<br>
 	<a href="librarymgt/manageLibraries.html">Manage libraries</a>
-	<p>&nbsp;</p>
-	<a href="setmgt/test.html">Test things</a>
 </BODY>
 </HTML>
