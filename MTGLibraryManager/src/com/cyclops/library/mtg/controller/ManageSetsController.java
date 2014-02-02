@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import com.cyclops.library.mtg.comparator.DisplaySetFormBeanSorter;
 import com.cyclops.library.mtg.domain.SetBean;
 import com.cyclops.library.mtg.form.SetsForm;
 import com.cyclops.library.mtg.form.bean.SetFormBean;
@@ -67,6 +68,8 @@ public class ManageSetsController {
 				}
 			}
 			
+			newSetsForm.setSets(DisplaySetFormBeanSorter.sortForDisplay(newSetsForm.getSets()));
+			
 			model.addAttribute("form", workForm);
 			model.addAttribute("newSetsForm", newSetsForm);
 			
@@ -95,6 +98,8 @@ public class ManageSetsController {
 					iter.remove();
 				}
 			}
+			
+			newSetsForm.setSets(DisplaySetFormBeanSorter.sortForDisplay(newSetsForm.getSets()));
 			
 			model.addAttribute("form", workForm);
 			model.addAttribute("newSetsForm", newSetsForm);
@@ -128,6 +133,12 @@ public class ManageSetsController {
 		setFormBeanBySetName.clear();
 		for (SetFormBean currSetFormBean : newSetsForm.getSets()) {
 			setFormBeanBySetName.put(currSetFormBean.getName(), currSetFormBean);
+		}
+		
+		newSetsForm.setSets(DisplaySetFormBeanSorter.sortForDisplay(newSetsForm.getSets()));
+		
+		for (SetFormBean t : newSetsForm.getSets()) {
+			System.out.println(t.getName() + "::" + t.getReleaseDate());
 		}
 		
 		model.addAttribute("form", workForm);

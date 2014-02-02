@@ -36,14 +36,15 @@
 					<tr>
 						<td>
 							<form:hidden path="sets[${status.index}].id"/>
-							<form:hidden path="sets[${status.index}].language"/>
 							<form:hidden path="sets[${status.index}].name"/>
 							<form:hidden path="sets[${status.index}].abbreviation"/>
+							<form:hidden path="sets[${status.index}].category"/>
+							<form:hidden path="sets[${status.index}].language"/>
 							<form:hidden path="sets[${status.index}].releaseDate"/>
 							<form:hidden path="sets[${status.index}].url"/>
 							<form:hidden path="sets[${status.index}].imageUrl"/>
 							
-							<a href='<c:out value="${currNewSet.name}"/>/displaySet.html'><c:out value="${currNewSet.name}"/></a>
+							<c:out value="${currNewSet.name}"/>
 						</td>
 						<td>${currNewSet.abbreviation}</td>
 						<td><img src="${currNewSet.imageUrl}"></td>
@@ -55,38 +56,6 @@
 				</c:forEach>
 			</tbody>
 		</table>
-		
-		<!--
-		<table>
-			<thead>
-				<tr>
-					<th>Set</th>
-					<th>&nbsp;</th>
-					<th>&nbsp;</th>
-					<th>Url</th>
-					<th>Number of cards</th>
-					<th>Aliases</th>
-				</tr>
-			</thead>
-			<tbody>
-				<c:forEach var="currNewSet" items="${newSetsForm.sets}" varStatus="status">
-					<tr>
-						<td>
-							<form:hidden path="sets[${status.index}].id"/>
-							<form:hidden path="sets[${status.index}].language"/>
-							<a href='<c:out value="${currNewSet.name}"/>/displaySet.html'><c:out value="${currNewSet.name}"/></a>
-							<form:hidden path="sets[${status.index}].name"/>
-						</td>
-						<td>${currNewSet.abbreviation}<form:hidden path="sets[${status.index}].abbreviation"/></td>
-						<td><img src="${currNewSet.imageUrl}"><form:hidden path="sets[${status.index}].imageUrl"/></td>
-						<td>${currNewSet.url}<form:hidden path="sets[${status.index}].url"/></td>
-						<td>${fn:length(currNewSet.cards)}</td>
-						<td><form:input path="sets[${status.index}].aliases"/></td>
-					</tr>
-				</c:forEach>
-			</tbody>
-		</table>
-		-->
 	</form:form>
 	
 	<h1>Sets</h1>

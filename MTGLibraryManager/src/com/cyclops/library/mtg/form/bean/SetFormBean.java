@@ -10,6 +10,7 @@ public class SetFormBean {
 	private int id;
 	private String name;
 	private String aliases;
+	private String category;
 	private String abbreviation;
 	private String language;
 	private String url;
@@ -17,7 +18,7 @@ public class SetFormBean {
 	private String releaseDate;
 	
 	private List<CardFormBean> cards = new ArrayList<>();
-	
+
 	public int getId() {
 		return id;
 	}
@@ -40,6 +41,14 @@ public class SetFormBean {
 
 	public void setAliases(String aliases) {
 		this.aliases = aliases;
+	}
+
+	public String getCategory() {
+		return category;
+	}
+
+	public void setCategory(String category) {
+		this.category = category;
 	}
 
 	public String getAbbreviation() {
@@ -73,7 +82,7 @@ public class SetFormBean {
 	public void setImageUrl(String imageUrl) {
 		this.imageUrl = imageUrl;
 	}
-	
+
 	public String getReleaseDate() {
 		return releaseDate;
 	}

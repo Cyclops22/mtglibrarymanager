@@ -1,23 +1,20 @@
 package com.cyclops.library.mtg.form.mapper;
 
-import java.text.DateFormat;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.text.StrBuilder;
 
+import com.cyclops.library.mtg.Constants;
 import com.cyclops.library.mtg.domain.AliasBean;
 import com.cyclops.library.mtg.domain.SetBean;
+import com.cyclops.library.mtg.domain.SetCategory;
 import com.cyclops.library.mtg.form.bean.SetFormBean;
 
 public class SetFormBeanMapper extends AbstractFormBeanMapper<SetBean, SetFormBean> {
-	
-	private static final DateFormat RELEASE_DATE_FORMAT = new SimpleDateFormat("MMM yyyy", Locale.ENGLISH);
 	
 	private CardFormBeanMapper cardBeanMapper = new CardFormBeanMapper();
 
@@ -29,6 +26,7 @@ public class SetFormBeanMapper extends AbstractFormBeanMapper<SetBean, SetFormBe
 			set = new SetBean();
 			
 			set.setAbbreviation(formBean.getAbbreviation());
+			set.setCategory(SetCategory.valueOf(formBean.getCategory()));
 			set.setId(formBean.getId());
 			set.setLogoUrl(formBean.getImageUrl());
 			set.setLanguage(formBean.getLanguage());
@@ -37,7 +35,7 @@ public class SetFormBeanMapper extends AbstractFormBeanMapper<SetBean, SetFormBe
 			
 			if (StringUtils.isNotBlank(formBean.getReleaseDate())) {
 				try {
-					set.setReleaseDate(RELEASE_DATE_FORMAT.parse(formBean.getReleaseDate()));
+					set.setReleaseDate(Constants.RELEASE_DATE_DATEFORMAT.parse(formBean.getReleaseDate()));
 					
 				} catch (ParseException e) {
 					e.printStackTrace();
@@ -70,6 +68,7 @@ public class SetFormBeanMapper extends AbstractFormBeanMapper<SetBean, SetFormBe
 			setForm = new SetFormBean();
 			
 			setForm.setAbbreviation(bean.getAbbreviation());
+			setForm.setCategory(bean.getCategory().toString());
 			setForm.setId(bean.getId());
 			setForm.setImageUrl(bean.getLogoUrl());
 			setForm.setLanguage(bean.getLanguage());
@@ -77,7 +76,7 @@ public class SetFormBeanMapper extends AbstractFormBeanMapper<SetBean, SetFormBe
 			setForm.setUrl(bean.getUrl());
 			
 			if (bean.getReleaseDate() != null) {
-				setForm.setReleaseDate(RELEASE_DATE_FORMAT.format(bean.getReleaseDate()));
+				setForm.setReleaseDate(Constants.RELEASE_DATE_DATEFORMAT.format(bean.getReleaseDate()));
 			}
 			
 			

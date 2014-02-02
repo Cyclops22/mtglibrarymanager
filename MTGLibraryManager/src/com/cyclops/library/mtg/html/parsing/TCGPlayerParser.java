@@ -15,6 +15,7 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import com.cyclops.library.mtg.domain.SetBean;
+import com.cyclops.library.mtg.domain.SetCategory;
 
 public class TCGPlayerParser {
 	
@@ -33,6 +34,7 @@ public class TCGPlayerParser {
 	}
 
 	public List<SetBean> retrieveAllSets() throws IOException {
+		SetCategory category = SetCategory.EXPANSION;
 		SetBean mtgSet = null;
 		List<SetBean> mtgSets = new ArrayList<>();
 
@@ -49,6 +51,7 @@ public class TCGPlayerParser {
 				
 				mtgSet.setLogoUrl(currElement.attr("src"));
 				mtgSet.setLanguage(Locale.ENGLISH.getLanguage());
+				mtgSet.setCategory(category);
 				
 				mtgSets.add(mtgSet);
 				
@@ -64,6 +67,10 @@ public class TCGPlayerParser {
 				}
 				
 				break;
+				
+			case "strong":
+				category = fromText(currElement.text());
+				break;
 
 			default:
 				break;
@@ -71,5 +78,24 @@ public class TCGPlayerParser {
 		}
 		
 		return mtgSets;
+	}
+	
+	private SetCategory fromText(String setCategoryDescription) {
+		SetCategory setCategory = null;
+		
+		switch (setCategoryDescription) {
+		case "Core Sets":
+			setCategory = SetCategory.CORE_SET;
+			break;
+		
+		case "Special sets":
+			setCategory = SetCategory.SPECIAL_SET;
+			break;
+			
+		default:
+			setCategory = SetCategory.UNKNOWN;
+		}
+		
+		return setCategory;
 	}
 }

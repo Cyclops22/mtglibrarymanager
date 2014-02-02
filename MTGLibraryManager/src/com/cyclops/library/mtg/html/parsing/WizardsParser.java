@@ -1,13 +1,11 @@
 package com.cyclops.library.mtg.html.parsing;
 
 import java.io.IOException;
-import java.text.DateFormat;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 
 import org.apache.commons.collections4.CollectionUtils;
@@ -17,11 +15,10 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import com.cyclops.library.mtg.Constants;
 import com.cyclops.library.mtg.domain.SetBean;
 
 public class WizardsParser {
-	
-	private static final DateFormat RELEASE_DATE_DATEFORMAT = new SimpleDateFormat("MMMM yyyy", Locale.ENGLISH);
 	
 	private Map<String, SetBean> formSetByName = new LinkedHashMap<>();
 	private Map<String, SetBean> formSetByAlias = new LinkedHashMap<>();
@@ -61,20 +58,45 @@ public class WizardsParser {
 			String setName = tdElements.get(1).text();
 			
 			setBean = getSetBean(setName);
+			Date releaseDate = null;
 			if (setBean != null) {
-				String releaseDate = tdElements.get(3).text();
+				releaseDate = extractReleaseDate(tdElements.get(3).text());
+				setBean.setReleaseDate(releaseDate);
 				
-				if (!StringUtils.contains(releaseDate, "Coming")) {
-					releaseDate = StringUtils.substringAfter(releaseDate, "Released ");
-					
-					try {
-						setBean.setReleaseDate(RELEASE_DATE_DATEFORMAT.parse(releaseDate));
-					} catch (ParseException e) {
-						e.printStackTrace();
-					}
-				}
+			}
+			
+			if ("Time Spiral".equals(setName)) {
+				setBean = getSetBean("Timeshifted");
+				setBean.setReleaseDate(releaseDate);
+				
 			}
 		}
+	}
+	
+	private Date extractReleaseDate(String releaseDateText) {
+		String releaseDateStr;
+		Date releaseDate = null;
+		
+		try {
+			if (StringUtils.contains(releaseDateText, "Coming")) {
+				releaseDateStr = StringUtils.substringAfter(releaseDateText, "Coming ");
+				Date comingReleaseDate = Constants.RELEASE_DATE_DATEFORMAT.parse(releaseDateStr);
+				
+				if (comingReleaseDate.before(new Date())) {
+					releaseDate = comingReleaseDate;
+				}
+				
+			} else {
+				releaseDateStr = StringUtils.substringAfter(releaseDateText, "Released ");
+				releaseDate = Constants.RELEASE_DATE_DATEFORMAT.parse(releaseDateStr);
+				
+			}
+			
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		
+		return releaseDate;
 	}
 	
 	private SetBean getSetBean(String setName) {

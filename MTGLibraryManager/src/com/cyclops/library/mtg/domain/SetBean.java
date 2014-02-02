@@ -6,6 +6,8 @@ import java.util.Locale;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
@@ -32,6 +34,9 @@ public class SetBean {
 	@LazyCollection(LazyCollectionOption.FALSE)
 	private List<AliasBean> aliases;
 	
+	@Enumerated(EnumType.STRING)
+	private SetCategory category;
+	
 	private String abbreviation;
 	
 	@NotNull
@@ -48,7 +53,7 @@ public class SetBean {
 	@JoinColumn(name="set_id")
 	@LazyCollection(LazyCollectionOption.FALSE)
 	private List<CardBean> cards;
-	
+
 	public int getId() {
 		return id;
 	}
@@ -71,6 +76,14 @@ public class SetBean {
 
 	public void setAliases(List<AliasBean> aliases) {
 		this.aliases = aliases;
+	}
+
+	public SetCategory getCategory() {
+		return category;
+	}
+
+	public void setCategory(SetCategory category) {
+		this.category = category;
 	}
 
 	public String getAbbreviation() {
@@ -104,14 +117,6 @@ public class SetBean {
 	public void setLogoUrl(String logoUrl) {
 		this.logoUrl = logoUrl;
 	}
-	
-	public List<CardBean> getCards() {
-		return cards;
-	}
-
-	public void setCards(List<CardBean> cards) {
-		this.cards = cards;
-	}
 
 	public Date getReleaseDate() {
 		return releaseDate;
@@ -119,5 +124,13 @@ public class SetBean {
 
 	public void setReleaseDate(Date releaseDate) {
 		this.releaseDate = releaseDate;
+	}
+
+	public List<CardBean> getCards() {
+		return cards;
+	}
+
+	public void setCards(List<CardBean> cards) {
+		this.cards = cards;
 	}
 }
