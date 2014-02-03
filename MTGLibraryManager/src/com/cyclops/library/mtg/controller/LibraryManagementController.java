@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import com.cyclops.library.mtg.comparator.DisplayLibrarySetFormBeanSorter;
 import com.cyclops.library.mtg.domain.SetBean;
 import com.cyclops.library.mtg.form.LibrariesForm;
 import com.cyclops.library.mtg.form.bean.LibraryFormBean;
@@ -82,6 +83,8 @@ public class LibraryManagementController {
 		
 		LibraryFormBean form = libraryBeanMapper.toFormBean(libraryMgtService.findLibraryById(Integer.parseInt(libraryId)));
 		
+		form.setSets(DisplayLibrarySetFormBeanSorter.sortForDisplay(form.getSets()));
+		
 		model.addAttribute("form", form);
 		
 		return "librarymgt/editLibrary";
@@ -106,7 +109,7 @@ public class LibraryManagementController {
 			}
 		}
 		
-		form.setSets(availableSets);
+		form.setSets(DisplayLibrarySetFormBeanSorter.sortForDisplay(availableSets));
 		
 		model.addAttribute("form", form);
 		

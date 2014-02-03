@@ -67,6 +67,7 @@
 				<th>&nbsp;</th>
 				<th>Url</th>
 				<th>Number of cards</th>
+				<th>Release date</th>
 				<th>Aliases</th>
 			</tr>
 		</thead>
@@ -80,6 +81,7 @@
 					<td><img src="${currSet.imageUrl}"></td>
 					<td>${currSet.url}</td>
 					<td>${fn:length(currSet.cards)}</td>
+					<td>${currSet.releaseDate}</td>
 					<td>${currSet.aliases}</td>
 				</tr>
 			</c:forEach>

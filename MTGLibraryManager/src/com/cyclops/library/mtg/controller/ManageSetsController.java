@@ -41,7 +41,7 @@ public class ManageSetsController {
 	public String displaySets(Model model) {
 		
 		workForm = new SetsForm();
-		workForm.setSets(new SetFormBeanMapper().toFormBean(setMgtService.findAll()));
+		workForm.setSets(DisplaySetFormBeanSorter.sortForDisplay(new SetFormBeanMapper().toFormBean(setMgtService.findAll())));
 		
 		model.addAttribute("form", workForm);
 		model.addAttribute("newSetsForm", new SetsForm());

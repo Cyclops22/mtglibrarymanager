@@ -67,8 +67,10 @@ public class WizardsParser {
 			
 			if ("Time Spiral".equals(setName)) {
 				setBean = getSetBean("Timeshifted");
-				setBean.setReleaseDate(releaseDate);
 				
+				if (setBean != null) {
+					setBean.setReleaseDate(releaseDate);
+				}
 			}
 		}
 	}
