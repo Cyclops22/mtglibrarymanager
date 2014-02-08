@@ -2,13 +2,9 @@ package com.cyclops.library.mtg.html.parsing;
 
 import java.io.IOException;
 import java.text.ParseException;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 
-import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -18,36 +14,28 @@ import org.jsoup.select.Elements;
 import com.cyclops.library.mtg.Constants;
 import com.cyclops.library.mtg.domain.SetBean;
 
-public class WizardsParser {
+public class WizardsParser extends SiteParser {
 	
-	private Map<String, SetBean> formSetByName = new LinkedHashMap<>();
-	private Map<String, SetBean> formSetByAlias = new LinkedHashMap<>();
+	private static final String SITE_INFO_URL = "http://www.wizards.com/magic/tcg/article.aspx?x=mtg/tcg/products/allproducts";
+	
+	private static final String UNWANTED_SETS_KEY = "parser.wizards.unwanted.sets";
+	
+	public WizardsParser() {
+		initUnwantedSets(UNWANTED_SETS_KEY);
+	}
 	
 	public List<SetBean> retrieveSetsDetails(List<SetBean> sets) throws IOException {
 		initMaps(sets);
 		
 		retrieveReleaseDate();
 		
-		return new ArrayList<>(formSetByName.values());
+		return getSets();
 	}
 	
-	private void initMaps(List<SetBean> sets) {
-		formSetByName.clear();
-		formSetByAlias.clear();
-		
-		for (SetBean currSet : sets) {
-			formSetByName.put(currSet.getName(), currSet);
-			
-			for (int i = 0; i < CollectionUtils.size(currSet.getAliases()); i++) {
-				formSetByAlias.put(currSet.getAliases().get(i).getAlias(), currSet);
-			}
-		}
-	}
-
 	private void retrieveReleaseDate() throws IOException {
 		SetBean setBean = null;
 		
-		Document doc = Jsoup.connect("http://www.wizards.com/magic/tcg/article.aspx?x=mtg/tcg/products/allproducts").get();
+		Document doc = Jsoup.connect(SITE_INFO_URL).get();
 
 		Elements elements = doc.select("table[background]");
 		for (int i = 0; i < elements.size(); i++) {
@@ -57,19 +45,43 @@ public class WizardsParser {
 			
 			String setName = tdElements.get(1).text();
 			
-			setBean = getSetBean(setName);
-			Date releaseDate = null;
-			if (setBean != null) {
-				releaseDate = extractReleaseDate(tdElements.get(3).text());
-				setBean.setReleaseDate(releaseDate);
-				
-			}
-			
-			if ("Time Spiral".equals(setName)) {
-				setBean = getSetBean("Timeshifted");
+			if (!getUnwantedSetsName().contains(setName)) {
+				setBean = getSetBean(setName);
+				Date releaseDate = extractReleaseDate(tdElements.get(3).text());
 				
 				if (setBean != null) {
 					setBean.setReleaseDate(releaseDate);
+					
+				}
+				
+				if ("Alpha, Beta, and Unlimited".equals(setName)) {
+					setBean = getSetBean("Beta Edition");
+					
+					if (setBean != null) {
+						setBean.setReleaseDate(releaseDate);
+					}
+					
+					setBean = getSetBean("Unlimited Edition");
+					
+					if (setBean != null) {
+						setBean.setReleaseDate(releaseDate);
+					}
+				}
+				
+				if ("Revised".equals(setName)) {
+					setBean = getSetBean("Revised Edition");
+					
+					if (setBean != null) {
+						setBean.setReleaseDate(releaseDate);
+					}
+				}
+				
+				if ("Time Spiral".equals(setName)) {
+					setBean = getSetBean("Timeshifted");
+					
+					if (setBean != null) {
+						setBean.setReleaseDate(releaseDate);
+					}
 				}
 			}
 		}
@@ -99,14 +111,5 @@ public class WizardsParser {
 		}
 		
 		return releaseDate;
-	}
-	
-	private SetBean getSetBean(String setName) {
-		SetBean setBean = formSetByName.get(setName);
-		if (setBean == null) {
-			setBean = formSetByAlias.get(setName);
-		}
-		
-		return setBean;
 	}
 }

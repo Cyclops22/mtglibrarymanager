@@ -1,15 +1,10 @@
 package com.cyclops.library.mtg.form.mapper;
 
 import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.List;
 
-import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.text.StrBuilder;
 
 import com.cyclops.library.mtg.Constants;
-import com.cyclops.library.mtg.domain.AliasBean;
 import com.cyclops.library.mtg.domain.SetBean;
 import com.cyclops.library.mtg.domain.SetCategory;
 import com.cyclops.library.mtg.form.bean.SetFormBean;
@@ -42,18 +37,6 @@ public class SetFormBeanMapper extends AbstractFormBeanMapper<SetBean, SetFormBe
 				}	
 			}
 			
-			String[] aliasesArray = StringUtils.split(formBean.getAliases(), ',');
-			List<AliasBean> aliasBeans = new ArrayList<>();
-			
-			for (int i = 0; i < aliasesArray.length; i++) {
-				AliasBean aliasBean = new AliasBean();
-				aliasBean.setAlias(StringUtils.trim(aliasesArray[i]));
-				
-				aliasBeans.add(aliasBean);
-			}
-			
-			set.setAliases(aliasBeans);
-			
 			set.setCards(cardBeanMapper.toBean(formBean.getCards()));			
 		}
 		
@@ -78,17 +61,6 @@ public class SetFormBeanMapper extends AbstractFormBeanMapper<SetBean, SetFormBe
 			if (bean.getReleaseDate() != null) {
 				setForm.setReleaseDate(Constants.RELEASE_DATE_DATEFORMAT.format(bean.getReleaseDate()));
 			}
-			
-			
-			StrBuilder strBuilder = new StrBuilder();
-			
-			
-			for (int i = 0; i < CollectionUtils.size(bean.getAliases()); i++) {
-				strBuilder.appendSeparator(", ", i);
-				strBuilder.append(bean.getAliases().get(i).getAlias());
-			}
-			
-			setForm.setAliases(strBuilder.toString());
 			
 			setForm.setCards(cardBeanMapper.toFormBean(bean.getCards()));
 		}

@@ -12,7 +12,7 @@
 </head>
 <body>
 
-	<a href="retrieveSets.html">Retrieve sets</a>
+	<a href="retrieveNewSets.html">Retrieve sets</a>
 
 	<form:form commandName="newSetsForm" action="submitMTGSets.html">
 		<input type="submit" name="Retrieve" value="Retrieve sets details" />
@@ -28,7 +28,6 @@
 					<th>Url</th>
 					<th>Number of cards</th>
 					<th>Release date</th>
-					<th>Aliases</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -51,7 +50,6 @@
 						<td>${currNewSet.url}</td>
 						<td>${fn:length(currNewSet.cards)}</td>
 						<td>${currNewSet.releaseDate}</td>
-						<td><form:input path="sets[${status.index}].aliases"/></td>
 					</tr>
 				</c:forEach>
 			</tbody>
@@ -68,7 +66,6 @@
 				<th>Url</th>
 				<th>Number of cards</th>
 				<th>Release date</th>
-				<th>Aliases</th>
 			</tr>
 		</thead>
 		<tbody>
@@ -82,7 +79,6 @@
 					<td>${currSet.url}</td>
 					<td>${fn:length(currSet.cards)}</td>
 					<td>${currSet.releaseDate}</td>
-					<td>${currSet.aliases}</td>
 				</tr>
 			</c:forEach>
 		</tbody>

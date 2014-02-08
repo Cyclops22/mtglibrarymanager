@@ -4,12 +4,9 @@ import java.io.IOException;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 
-import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -19,7 +16,9 @@ import org.jsoup.select.Elements;
 import com.cyclops.library.mtg.domain.CardBean;
 import com.cyclops.library.mtg.domain.SetBean;
 
-public class MagicCardsInfoParser {
+public class MagicCardsInfoParser extends SiteParser {
+	
+	private static final String SITE_INFO_URL = "http://magiccards.info/sitemap.html";
 	
 	private static final String DEFAULT_LANGUAGE = Locale.ENGLISH.getLanguage();
 	private static final String SITE_ROOT = "http://magiccards.info";
@@ -28,13 +27,16 @@ public class MagicCardsInfoParser {
 	
 	private static final List<String> CARDS_TO_IGNORE = Arrays.asList("Plains", "Island", "Swamp", "Mountain", "Forest");
 	
-	private Map<String, SetBean> formSetByName = new LinkedHashMap<>();
-	private Map<String, SetBean> formSetByAlias = new LinkedHashMap<>();
-
+	private static final String UNWANTED_SETS_KEY = "parser.magiccardsinfo.unwanted.sets";
+	
+	public MagicCardsInfoParser() {
+		initUnwantedSets(UNWANTED_SETS_KEY);
+	}
+	
 	public List<SetBean> retrieveSetsDetails(List<SetBean> sets) throws IOException {
 		initMaps(sets);
 		
-		Document sitemapDocument = Jsoup.connect("http://magiccards.info/sitemap.html").get();
+		Document sitemapDocument = Jsoup.connect(SITE_INFO_URL).get();
 		
 		retrieveExpansionsDetails(sitemapDocument);
 		retrieveCoreSetsDetails(sitemapDocument);
@@ -42,20 +44,7 @@ public class MagicCardsInfoParser {
 		
 		extractExpansionCards();
 		
-		return new ArrayList<>(formSetByName.values());
-	}
-	
-	private void initMaps(List<SetBean> sets) {
-		formSetByName.clear();
-		formSetByAlias.clear();
-		
-		for (SetBean currSet : sets) {
-			formSetByName.put(currSet.getName(), currSet);
-			
-			for (int i = 0; i < CollectionUtils.size(currSet.getAliases()); i++) {
-				formSetByAlias.put(currSet.getAliases().get(i).getAlias(), currSet);
-			}
-		}
+		return getSets();
 	}
 	
 	private void retrieveExpansionsDetails(Document sitemapDoc) throws IOException {
@@ -81,18 +70,32 @@ public class MagicCardsInfoParser {
 			Element currElement = setElements.get(i);
 			
 			if (i % 2 == 0) {
-				processSet = true;
 				String setName = currElement.text();
 				
-				setBean = getSetBean(setName);
-				if (setBean != null) {
-					setBean.setLanguage(StringUtils.defaultString(setBean.getLanguage(), DEFAULT_LANGUAGE));
-					setBean.setUrl(SITE_ROOT + currElement.attr("href"));
-				
-				} else {
-					processSet = false;
+				if (!getUnwantedSetsName().contains(setName)) {
+					processSet = true;
 					
+					if ("Time Spiral \"Timeshifted\"".equals(setName)) {
+						setName = "Timeshifted";
+						
+					} else if ("Limited Edition Beta".equals(setName)) {
+						setName = "Beta Edition";
+						
+					} else if ("Limited Edition Alpha".equals(setName)) {
+						setName = "Alpha Edition";
+					}
+					
+					setBean = getSetBean(setName);
+					if (setBean != null) {
+						setBean.setLanguage(StringUtils.defaultString(setBean.getLanguage(), DEFAULT_LANGUAGE));
+						setBean.setUrl(SITE_ROOT + currElement.attr("href"));
+					
+					} else {
+						processSet = false;
+						
+					}
 				}
+				
 			} else {
 				if (processSet) {
 					setBean.setAbbreviation(currElement.text());
@@ -101,24 +104,16 @@ public class MagicCardsInfoParser {
 		}
 	}
 	
-	private SetBean getSetBean(String setName) {
-		SetBean setBean = formSetByName.get(setName);
-		if (setBean == null) {
-			setBean = formSetByAlias.get(setName);
-		}
-		
-		return setBean;
-	}
-	
 	private void extractExpansionCards() throws IOException {
 		int fetchSize = 25;
 		int fetchIdx = 0;
 		
-		for (String currSet : formSetByName.keySet()) {
+		for (String currSetName : getSetsName()) {
 			List<CardBean> cardsInSet = new ArrayList<>();
 			
-			if (StringUtils.isNotBlank(formSetByName.get(currSet).getUrl()))  {
-				Document doc = Jsoup.connect(formSetByName.get(currSet).getUrl()).get();
+			SetBean setBean = getSetBean(currSetName);
+			if (StringUtils.isNotBlank(setBean.getUrl()))  {
+				Document doc = Jsoup.connect(setBean.getUrl()).get();
 				
 				Elements cards = doc.select("table tr[class]");
 				for (Element currCard : cards) {
@@ -146,7 +141,7 @@ public class MagicCardsInfoParser {
 					}
 				}
 				
-				formSetByName.get(currSet).setCards(cardsInSet);
+				setBean.setCards(cardsInSet);
 				
 				fetchIdx++;
 				

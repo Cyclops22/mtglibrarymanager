@@ -29,11 +29,6 @@ public class SetBean {
 	@NotNull
 	private String name;
 	
-	@OneToMany(cascade = { CascadeType.ALL }, orphanRemoval = true)
-	@JoinColumn(name="set_id", referencedColumnName="id")
-	@LazyCollection(LazyCollectionOption.FALSE)
-	private List<AliasBean> aliases;
-	
 	@Enumerated(EnumType.STRING)
 	private SetCategory category;
 	
@@ -53,6 +48,11 @@ public class SetBean {
 	@JoinColumn(name="set_id")
 	@LazyCollection(LazyCollectionOption.FALSE)
 	private List<CardBean> cards;
+	
+	@Override
+	public String toString() {
+		return name;
+	}
 
 	public int getId() {
 		return id;
@@ -68,14 +68,6 @@ public class SetBean {
 
 	public void setName(String name) {
 		this.name = name;
-	}
-
-	public List<AliasBean> getAliases() {
-		return aliases;
-	}
-
-	public void setAliases(List<AliasBean> aliases) {
-		this.aliases = aliases;
 	}
 
 	public SetCategory getCategory() {
