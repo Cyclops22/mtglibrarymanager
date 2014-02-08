@@ -19,6 +19,7 @@
 	<context:component-scan base-package="com.cyclops.library.mtg.domain" />
 	<context:component-scan base-package="com.cyclops.library.mtg.repository" />
 	<context:component-scan base-package="com.cyclops.library.mtg.service" />
+	<context:component-scan base-package="com.cyclops.library.mtg.html.parsing" />
 	
 	<!-- Load Hibernate related configuration -->
 	<import resource="hibernate-context.xml" />

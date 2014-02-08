@@ -12,10 +12,12 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.springframework.stereotype.Component;
 
 import com.cyclops.library.mtg.domain.CardBean;
 import com.cyclops.library.mtg.domain.SetBean;
 
+@Component("magicCardsInfoParser")
 public class MagicCardsInfoParser extends SiteParser {
 	
 	private static final String SITE_INFO_URL = "http://magiccards.info/sitemap.html";
@@ -29,12 +31,15 @@ public class MagicCardsInfoParser extends SiteParser {
 	
 	private static final String UNWANTED_SETS_KEY = "parser.magiccardsinfo.unwanted.sets";
 	
+	private List<String> processedSets = new ArrayList<>();
+	
 	public MagicCardsInfoParser() {
 		initUnwantedSets(UNWANTED_SETS_KEY);
 	}
 	
 	public List<SetBean> retrieveSetsDetails(List<SetBean> sets) throws IOException {
 		initMaps(sets);
+		processedSets.clear();
 		
 		Document sitemapDocument = Jsoup.connect(SITE_INFO_URL).get();
 		
@@ -86,9 +91,11 @@ public class MagicCardsInfoParser extends SiteParser {
 					}
 					
 					setBean = getSetBean(setName);
-					if (setBean != null) {
+					if (setBean != null && !processedSets.contains(setBean.getName())) {
 						setBean.setLanguage(StringUtils.defaultString(setBean.getLanguage(), DEFAULT_LANGUAGE));
 						setBean.setUrl(SITE_ROOT + currElement.attr("href"));
+						
+						processedSets.add(setBean.getName());
 					
 					} else {
 						processSet = false;

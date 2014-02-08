@@ -51,6 +51,8 @@ public class ManageSetsController {
 	
 	@RequestMapping(value = "/setmgt/retrieveNewSets", method = RequestMethod.GET)
 	public String retrieveNewSets(Model model) {
+		SetFormBeanMapper beanMapper = new SetFormBeanMapper();
+		
 		List<String> persistedSets = new ArrayList<>();
 		SetsForm newSetsForm = new SetsForm();
 		
@@ -59,8 +61,8 @@ public class ManageSetsController {
 		}
 		
 		try {
-			newSetsForm.setSets(new SetFormBeanMapper().toFormBean(setMgtService.retrieveAllSets()));
-			for (Iterator<SetFormBean> iter = newSetsForm.getSets().iterator(); iter.hasNext(); ) {
+			List<SetFormBean> sets = beanMapper.toFormBean(setMgtService.retrieveAllSets());
+			for (Iterator<SetFormBean> iter = sets.iterator(); iter.hasNext(); ) {
 				SetFormBean currSetFormBean = iter.next();
 				
 				if (persistedSets.contains(currSetFormBean.getName())) {
@@ -68,7 +70,12 @@ public class ManageSetsController {
 				}
 			}
 			
-			newSetsForm.setSets(DisplaySetFormBeanSorter.sortForDisplay(newSetsForm.getSets()));
+			newSetsForm.setSets(DisplaySetFormBeanSorter.sortForDisplay(sets));
+			
+			setFormBeanBySetName.clear();
+			for (SetFormBean currSetFormBean : newSetsForm.getSets()) {
+				setFormBeanBySetName.put(currSetFormBean.getName(), currSetFormBean);
+			}
 			
 			model.addAttribute("form", workForm);
 			model.addAttribute("newSetsForm", newSetsForm);
@@ -79,37 +86,6 @@ public class ManageSetsController {
 		
 		return "setmgt/manageSets";
 	}
-	
-//	@RequestMapping(value = "/setmgt/retrieveSets", method = RequestMethod.GET)
-//	public String scanSite(Model model) {
-//		List<String> persistedSets = new ArrayList<>();
-//		SetsForm newSetsForm = new SetsForm();
-//		
-//		for (SetFormBean currSet : workForm.getSets()) {
-//			persistedSets.add(currSet.getName());
-//		}
-//		
-//		try {
-//			newSetsForm.setSets(new SetFormBeanMapper().toFormBean(setMgtService.retrieveAllSets()));
-//			for (Iterator<SetFormBean> iter = newSetsForm.getSets().iterator(); iter.hasNext(); ) {
-//				SetFormBean currSetFormBean = iter.next();
-//				
-//				if (persistedSets.contains(currSetFormBean.getName())) {
-//					iter.remove();
-//				}
-//			}
-//			
-//			newSetsForm.setSets(DisplaySetFormBeanSorter.sortForDisplay(newSetsForm.getSets()));
-//			
-//			model.addAttribute("form", workForm);
-//			model.addAttribute("newSetsForm", newSetsForm);
-//			
-//		} catch (IOException e) {
-//			e.printStackTrace();
-//		}
-//		
-//		return "setmgt/manageSets";
-//	}
 	
 	@RequestMapping(value = "/setmgt/{setName}/displaySet", method = RequestMethod.GET)
 	public String displaySet(@PathVariable("setName") String setName, Model model) {
@@ -122,25 +98,6 @@ public class ManageSetsController {
 		}
 		
 		return "setmgt/setDetails";
-	}
-	
-	@RequestMapping(value = "/setmgt/submitMTGSets", params = "Retrieve", method = RequestMethod.POST)
-	public String editMTGSets(@ModelAttribute("newSetsForm") SetsForm newSetsForm, BindingResult result, Model model) throws IOException {
-		SetFormBeanMapper beanMapper = new SetFormBeanMapper();
-		
-		newSetsForm.setSets(beanMapper.toFormBean(setMgtService.populateSets(beanMapper.toBean(newSetsForm.getSets()))));
-		
-		setFormBeanBySetName.clear();
-		for (SetFormBean currSetFormBean : newSetsForm.getSets()) {
-			setFormBeanBySetName.put(currSetFormBean.getName(), currSetFormBean);
-		}
-		
-		newSetsForm.setSets(DisplaySetFormBeanSorter.sortForDisplay(newSetsForm.getSets()));
-		
-		model.addAttribute("form", workForm);
-		model.addAttribute("newSetsForm", newSetsForm);
-		
-		return "setmgt/manageSets";
 	}
 	
 	@RequestMapping(value = "/setmgt/submitMTGSets", params = "Save", method = RequestMethod.POST)

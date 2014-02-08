@@ -10,10 +10,12 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.springframework.stereotype.Component;
 
 import com.cyclops.library.mtg.domain.SetBean;
 import com.cyclops.library.mtg.domain.SetCategory;
 
+@Component("tcgPlayerParser")
 public class TCGPlayerParser extends SiteParser {
 	
 	private static final String SITE_INFO_URL = "http://magic.tcgplayer.com/all_magic_sets.asp";

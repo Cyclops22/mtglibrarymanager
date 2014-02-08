@@ -13,8 +13,6 @@ public interface SetMgtService {
 
 	List<SetBean> retrieveAllSets() throws IOException;
 
-	List<SetBean> populateSets(List<SetBean> mtgSetBeans) throws IOException;
-	
 	public void update(int id, SetBean mtgSetBean);
 
 }

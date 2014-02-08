@@ -20,9 +20,14 @@ public class SetMgtServiceImpl implements SetMgtService {
 
 	private SetMgtDAO mtgLibraryDAO;
 	
-	private TCGPlayerParser tcgPlayerParser = new TCGPlayerParser();
-	private MagicCardsInfoParser magicCardsInfoParser = new MagicCardsInfoParser();
-	private WizardsParser wizardsParser = new WizardsParser();
+	@Autowired
+	private TCGPlayerParser tcgPlayerParser;
+	
+	@Autowired
+	private MagicCardsInfoParser magicCardsInfoParser;
+	
+	@Autowired
+	private WizardsParser wizardsParser;
 
 	@Autowired
 	public SetMgtServiceImpl(SetMgtDAO mtgLibraryDAO) {
@@ -32,17 +37,11 @@ public class SetMgtServiceImpl implements SetMgtService {
 	public List<SetBean> retrieveAllSets() throws IOException {
 		List<SetBean> allSets = tcgPlayerParser.retrieveAllSets();
 		allSets = wizardsParser.retrieveSetsDetails(allSets);
+		allSets = magicCardsInfoParser.retrieveSetsDetails(allSets);
 		
 		return allSets;
 	}
 	
-	public List<SetBean> populateSets(List<SetBean> mtgSetBeans) throws IOException {
-		List<SetBean> allSets = magicCardsInfoParser.retrieveSetsDetails(mtgSetBeans);
-		allSets = wizardsParser.retrieveSetsDetails(allSets);
-		
-		return allSets;
-	}
-
 	@Override
 	@Transactional(propagation = Propagation.REQUIRED, readOnly = true)
 	public void addMTGSet(SetBean mtgSetBean) {
@@ -58,5 +57,29 @@ public class SetMgtServiceImpl implements SetMgtService {
 	public void update(int id, SetBean mtgSetFormBean) {
 		// TODO Auto-generated method stub
 		
+	}
+
+	public TCGPlayerParser getTcgPlayerParser() {
+		return tcgPlayerParser;
+	}
+
+	public void setTcgPlayerParser(TCGPlayerParser tcgPlayerParser) {
+		this.tcgPlayerParser = tcgPlayerParser;
+	}
+
+	public MagicCardsInfoParser getMagicCardsInfoParser() {
+		return magicCardsInfoParser;
+	}
+
+	public void setMagicCardsInfoParser(MagicCardsInfoParser magicCardsInfoParser) {
+		this.magicCardsInfoParser = magicCardsInfoParser;
+	}
+
+	public WizardsParser getWizardsParser() {
+		return wizardsParser;
+	}
+
+	public void setWizardsParser(WizardsParser wizardsParser) {
+		this.wizardsParser = wizardsParser;
 	}
 }
