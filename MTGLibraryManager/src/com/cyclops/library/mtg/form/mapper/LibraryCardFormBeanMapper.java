@@ -5,7 +5,7 @@ import com.cyclops.library.mtg.form.bean.LibraryCardFormBean;
 
 public class LibraryCardFormBeanMapper extends AbstractFormBeanMapper<LibraryCardBean, LibraryCardFormBean> {
 
-	private CardFormBeanMapper cardBeanMapper = new CardFormBeanMapper();
+	private CardFormBeanMapper cardFormBeanMapper = new CardFormBeanMapper();
 	
 	@Override
 	public LibraryCardBean toBean(LibraryCardFormBean formBean) {
@@ -17,7 +17,7 @@ public class LibraryCardFormBeanMapper extends AbstractFormBeanMapper<LibraryCar
 			bean.setFoilQuantity(formBean.getFoilQuantity());
 			bean.setId(formBean.getId());
 			bean.setQuantity(formBean.getQuantity());
-			bean.setReferencedCard(cardBeanMapper.toBean(formBean.getReferencedCard()));			
+			bean.setReferencedCard(cardFormBeanMapper.toBean(formBean.getReferencedCard()));			
 		}
 		
 		return bean;
@@ -33,10 +33,9 @@ public class LibraryCardFormBeanMapper extends AbstractFormBeanMapper<LibraryCar
 			formBean.setFoilQuantity(bean.getFoilQuantity());
 			formBean.setId(bean.getId());
 			formBean.setQuantity(bean.getQuantity());
-			formBean.setReferencedCard(cardBeanMapper.toFormBean(bean.getReferencedCard()));			
+			formBean.setReferencedCard(cardFormBeanMapper.toFormBean(bean.getReferencedCard()));			
 		}
 		
 		return formBean;
 	}
-
 }

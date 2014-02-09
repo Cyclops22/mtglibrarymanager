@@ -1,5 +1,6 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
@@ -11,7 +12,8 @@
 <title>Sets management</title>
 </head>
 <body>
-
+	<fmt:setBundle basename="com.cyclops.library.mtg.resources.resources" var="bundle"/>
+	
 	<a href="retrieveNewSets.html">Retrieve sets</a>
 
 	<form:form commandName="newSetsForm" action="submitMTGSets.html">
@@ -30,7 +32,19 @@
 				</tr>
 			</thead>
 			<tbody>
+				<c:set var="newSetLastGroup" />
+				
 				<c:forEach var="currNewSet" items="${newSetsForm.sets}" varStatus="status">
+					<c:if test="${currNewSet.category != newSetLastGroup}">
+						<tr>
+							<td colspan="6">
+								<fmt:message key="expansion.detail.description.${currNewSet.category}" bundle="${bundle}"/>
+							</td>
+						</tr>
+					</c:if>
+					
+					<c:set var="newSetLastGroup" value="${currNewSet.category}" />
+					
 					<tr>
 						<td>
 							<form:hidden path="sets[${status.index}].id"/>
@@ -68,7 +82,19 @@
 			</tr>
 		</thead>
 		<tbody>
+			<c:set var="lastGroup" value="" />
+			
 			<c:forEach var="currSet" items="${form.sets}" varStatus="status">
+				<c:if test="${currSet.category != lastGroup}">
+					<tr>
+						<td colspan="6">
+							<h2><fmt:message key="expansion.detail.description.${currSet.category}" bundle="${bundle}"/></h2>
+						</td>
+					</tr>
+				</c:if>
+				
+				<c:set var="lastGroup" value="${currSet.category}" />
+			
 				<tr>
 					<td>
 						<a href='<c:out value="${currSet.name}"/>/displaySet.html'><c:out value="${currSet.name}"/></a>

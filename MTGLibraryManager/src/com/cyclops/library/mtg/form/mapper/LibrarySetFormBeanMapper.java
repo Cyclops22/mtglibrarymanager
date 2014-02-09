@@ -5,8 +5,8 @@ import com.cyclops.library.mtg.form.bean.LibrarySetFormBean;
 
 public class LibrarySetFormBeanMapper extends AbstractFormBeanMapper<LibrarySetBean, LibrarySetFormBean> {
 
-	private LibraryCardFormBeanMapper libraryCardBeanMapper = new LibraryCardFormBeanMapper();
-	private SetFormBeanMapper setBeanMapper = new SetFormBeanMapper();
+	private LibraryCardFormBeanMapper libraryCardFormBeanMapper = new LibraryCardFormBeanMapper();
+	private SetFormBeanMapper setFormBeanMapper = new SetFormBeanMapper();
 	
 	@Override
 	public LibrarySetBean toBean(LibrarySetFormBean formBean) {
@@ -15,9 +15,9 @@ public class LibrarySetFormBeanMapper extends AbstractFormBeanMapper<LibrarySetB
 		if (formBean != null) {
 			bean = new LibrarySetBean();
 			
-			bean.setCards(libraryCardBeanMapper.toBean(formBean.getCards()));
+			bean.setCards(libraryCardFormBeanMapper.toBean(formBean.getCards()));
 			bean.setId(formBean.getId());
-			bean.setReferencedSet(setBeanMapper.toBean(formBean.getReferencedSet()));
+			bean.setReferencedSet(setFormBeanMapper.toBean(formBean.getReferencedSet()));
 		}
 		
 		return bean;
@@ -30,12 +30,11 @@ public class LibrarySetFormBeanMapper extends AbstractFormBeanMapper<LibrarySetB
 		if (bean != null) {
 			formBean = new LibrarySetFormBean();
 			
-			formBean.setCards(libraryCardBeanMapper.toFormBean(bean.getCards()));
+			formBean.setCards(libraryCardFormBeanMapper.toFormBean(bean.getCards()));
 			formBean.setId(bean.getId());
-			formBean.setReferencedSet(setBeanMapper.toFormBean(bean.getReferencedSet()));
+			formBean.setReferencedSet(setFormBeanMapper.toFormBean(bean.getReferencedSet()));
 		}
 		
 		return formBean;
 	}
-
 }

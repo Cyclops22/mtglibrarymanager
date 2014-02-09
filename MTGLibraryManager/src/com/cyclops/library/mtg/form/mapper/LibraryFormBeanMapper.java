@@ -1,11 +1,14 @@
 package com.cyclops.library.mtg.form.mapper;
 
+import org.springframework.stereotype.Component;
+
 import com.cyclops.library.mtg.domain.LibraryBean;
 import com.cyclops.library.mtg.form.bean.LibraryFormBean;
 
+@Component
 public class LibraryFormBeanMapper extends AbstractFormBeanMapper<LibraryBean, LibraryFormBean> {
 
-	private LibrarySetFormBeanMapper librarySetBeanMapper = new LibrarySetFormBeanMapper();
+	private LibrarySetFormBeanMapper librarySetFormBeanMapper = new LibrarySetFormBeanMapper();
 	
 	@Override
 	public LibraryBean toBean(LibraryFormBean formBean) {
@@ -16,7 +19,7 @@ public class LibraryFormBeanMapper extends AbstractFormBeanMapper<LibraryBean, L
 			
 			bean.setId(formBean.getId());
 			bean.setName(formBean.getName());
-			bean.setSets(librarySetBeanMapper.toBean(formBean.getSets()));			
+			bean.setSets(librarySetFormBeanMapper.toBean(formBean.getSets()));			
 		}
 		
 		return bean;
@@ -31,10 +34,9 @@ public class LibraryFormBeanMapper extends AbstractFormBeanMapper<LibraryBean, L
 			
 			formBean.setId(bean.getId());
 			formBean.setName(bean.getName());
-			formBean.setSets(librarySetBeanMapper.toFormBean(bean.getSets()));
+			formBean.setSets(librarySetFormBeanMapper.toFormBean(bean.getSets()));
 		}
 		
 		return formBean;
 	}
-
 }

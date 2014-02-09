@@ -11,7 +11,7 @@ import com.cyclops.library.mtg.form.bean.SetFormBean;
 
 public class SetFormBeanMapper extends AbstractFormBeanMapper<SetBean, SetFormBean> {
 	
-	private CardFormBeanMapper cardBeanMapper = new CardFormBeanMapper();
+	private CardFormBeanMapper cardFormBeanMapper = new CardFormBeanMapper();
 
 	@Override
 	public SetBean toBean(SetFormBean formBean) {
@@ -37,7 +37,7 @@ public class SetFormBeanMapper extends AbstractFormBeanMapper<SetBean, SetFormBe
 				}	
 			}
 			
-			set.setCards(cardBeanMapper.toBean(formBean.getCards()));			
+			set.setCards(cardFormBeanMapper.toBean(formBean.getCards()));			
 		}
 		
 		return set;
@@ -62,10 +62,9 @@ public class SetFormBeanMapper extends AbstractFormBeanMapper<SetBean, SetFormBe
 				setForm.setReleaseDate(Constants.RELEASE_DATE_DATEFORMAT.format(bean.getReleaseDate()));
 			}
 			
-			setForm.setCards(cardBeanMapper.toFormBean(bean.getCards()));
+			setForm.setCards(cardFormBeanMapper.toFormBean(bean.getCards()));
 		}
 		
 		return setForm;
 	}
-
 }
