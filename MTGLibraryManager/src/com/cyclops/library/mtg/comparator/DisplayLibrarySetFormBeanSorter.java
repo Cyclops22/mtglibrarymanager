@@ -32,7 +32,7 @@ public class DisplayLibrarySetFormBeanSorter {
 		result.addAll(setByCategory.get(SetCategory.EXPANSION));
 		result.addAll(setByCategory.get(SetCategory.CORE_SET));
 		result.addAll(setByCategory.get(SetCategory.SPECIAL_SET));
-		result.addAll(setByCategory.get(SetCategory.UNKNOWN));
+		result.addAll(setByCategory.get(SetCategory.OTHER));
 		
 		return result;
 	}

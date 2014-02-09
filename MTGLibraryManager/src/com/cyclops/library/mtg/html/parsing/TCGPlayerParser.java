@@ -54,6 +54,8 @@ public class TCGPlayerParser extends SiteParser {
 				if (StringUtils.isNotBlank(currElement.text())) {
 					mtgSet.setName(currElement.text());
 					
+					mtgSet.setCategory(fromName(mtgSet.getName(), category));
+					
 					if (getUnwantedSetsName().contains(mtgSet.getName())) {
 						mtgSets.remove(mtgSets.size() - 1);
 					}
@@ -86,7 +88,27 @@ public class TCGPlayerParser extends SiteParser {
 			break;
 			
 		default:
-			setCategory = SetCategory.UNKNOWN;
+			setCategory = SetCategory.OTHER;
+		}
+		
+		return setCategory;
+	}
+	
+	private SetCategory fromName(String setName, SetCategory initialCategory) {
+		SetCategory setCategory = initialCategory;
+		
+		if (setName.contains("From the Vault")) {
+			setCategory = SetCategory.SPECIAL_SET_FTV;
+			
+		} else if (setName.contains("vs")) {
+			setCategory = SetCategory.SPECIAL_SET_DUEL;
+			
+		} else if (setName.contains("PDS")) {
+			setCategory = SetCategory.SPECIAL_SET_PDS;
+			
+		} else if (setName.contains("Commander") || setName.contains("Planechase")) {
+			setCategory = SetCategory.SPECIAL_SET_EDH;
+			
 		}
 		
 		return setCategory;
