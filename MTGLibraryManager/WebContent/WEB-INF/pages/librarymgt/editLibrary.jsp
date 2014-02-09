@@ -23,6 +23,7 @@
 				<tr>
 					<th>&nbsp;</th>
 					<th>Set</th>
+					<th>&nbsp;</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -31,7 +32,7 @@
 				<c:forEach var="currSet" items="${form.sets}" varStatus="status">
 					<c:if test="${currSet.referencedSet.category != lastGroup}">
 						<tr>
-							<td colspan="2">
+							<td colspan="3">
 								<h2><fmt:message key="expansion.detail.description.${currSet.referencedSet.category}" bundle="${bundle}"/></h2>
 							</td>
 						</tr>
@@ -47,6 +48,9 @@
 						</td>
 						<td>
 							<a href="${currSet.id}/editSetLibrary.html"><c:out value="${currSet.referencedSet.name}"/></a>
+						</td>
+						<td>
+							<img src='<c:out value="${currSet.referencedSet.imageUrl}"/>'/>
 						</td>
 					</tr>
 				</c:forEach>
