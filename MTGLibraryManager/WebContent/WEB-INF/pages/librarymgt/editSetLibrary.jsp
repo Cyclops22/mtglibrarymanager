@@ -1,35 +1,46 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
-<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
-    pageEncoding="ISO-8859-1"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title>Managing library set</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<link type="text/css" rel="stylesheet" href="<c:url value="/css/style.css" />" />
+	<title>Managing library set</title>
 </head>
 <body>
+	<fmt:setBundle basename="com.cyclops.library.mtg.resources.resources" var="bundle"/>
+	
 	<form:form commandName="form" action="submitSetLibrary.html">
 		<input type="submit" value="Save" />
 		<input type="button" value="Cancel" onclick="location.href='../editLibrary.html'" />
 		
 		<form:hidden path="id" />
 		
-		<table>
+		<table class="listing">
 			<thead>
 				<tr>
-					<th rowspan="2" colspan="2">${form.referencedSet.name}</th>
-					<th colspan="2">Quantities</th>
+					<th colspan="7"><h1>${form.referencedSet.name}</h1></th>
 				</tr>
 				<tr>
-					<th>Normal</th>
-					<th>Foil</th>
+					<th><fmt:message key="edit.set.library.form.label.card.number" bundle="${bundle}"/></th>
+					<th><fmt:message key="edit.set.library.form.label.card.name" bundle="${bundle}"/></th>
+					<th><fmt:message key="edit.set.library.form.label.card.type" bundle="${bundle}"/></th>
+					<th><fmt:message key="edit.set.library.form.label.card.cost" bundle="${bundle}"/></th>
+					<th><fmt:message key="edit.set.library.form.label.card.rarity" bundle="${bundle}"/></th>
+					<th colspan="2" class="center"><fmt:message key="edit.set.library.form.label.card.quantities" bundle="${bundle}"/></th>
+				</tr>
+				<tr>
+					<th colspan="5">&nbsp;</th>
+					<th class="center"><fmt:message key="edit.set.library.form.label.card.quantity.normal" bundle="${bundle}"/></th>
+					<th class="center"><fmt:message key="edit.set.library.form.label.card.quantity.foil" bundle="${bundle}"/></th>
 				</tr>
 			</thead>
 			<tbody>
 				<c:forEach var="currCard" items="${form.cards}" varStatus="status">
-					<tr>
+					<tr class="${status.index % 2 == 0 ? 'even' : 'odd'}">
 						<td>
 							<form:hidden path="cards[${status.index}].id"/>
 							<form:hidden path="cards[${status.index}].referencedCard.id"/>
@@ -41,8 +52,15 @@
 							<a href="<c:out value='${currCard.referencedCard.url}'/>" target="_blank">
 								<c:out value="${currCard.referencedCard.name}"/>
 							</a>
-							
-							
+						</td>
+						<td>
+							<c:out value="${currCard.referencedCard.type}"/>
+						</td>
+						<td>
+							<c:out value="${currCard.referencedCard.mana}"/>
+						</td>
+						<td>
+							<c:out value="${currCard.referencedCard.rarity}"/>
 						</td>
 						<td>
 							<input type="button" value="-" onclick="removeQty(${currCard.id});"/>

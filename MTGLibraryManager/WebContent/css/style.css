@@ -1,0 +1,24 @@
+table.listing {
+	border-spacing: 0px;
+    border-collapse: separate;
+}
+
+table.listing th {
+	text-align: left;
+}
+
+table.listing th.center {
+	text-align: center;
+}
+
+table.listing tr.even {
+	background-color: #fafafa;
+}
+
+table.listing tr.odd {
+	background-color: #e0e0e0;
+}
+
+table.listing td {
+	padding: 0px 10px 0px 0px;
+}
