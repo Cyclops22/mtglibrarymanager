@@ -154,7 +154,7 @@ public class MagicCardsInfoParser extends SiteParser {
 				
 				// To limit the fetch for testing purpose
 				if (fetchIdx == fetchSize) {
-					break;
+//					break;
 				}
 			}
 		}

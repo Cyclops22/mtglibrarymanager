@@ -6,8 +6,9 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>Managing ${form.name}</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<link type="text/css" rel="stylesheet" href="<c:url value="/css/style.css" />" />
+	<title>Managing ${form.name}</title>
 </head>
 <body>
 	<fmt:setBundle basename="com.cyclops.library.mtg.resources.resources" var="bundle"/>
@@ -17,7 +18,7 @@
 		<input type="submit" name="RemoveSelected" value="Remove selected"/>
 		<input type="button" value="Back" onclick="location.href='../manageLibraries.html'"/>
 
-		<table>
+		<table class="listing">
 			<thead>
 				<tr>
 					<th>&nbsp;</th>
@@ -39,7 +40,7 @@
 					
 					<c:set var="lastGroup" value="${currSet.referencedSet.category}" />
 				
-					<tr>
+					<tr class="${status.index % 2 == 0 ? 'even' : 'odd'}">
 						<td>
 							<form:checkbox path="sets[${status.index}].selected"/>
 							<form:hidden path="sets[${status.index}].id"/>
