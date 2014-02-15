@@ -19,6 +19,10 @@ table.listing tr.odd {
 	background-color: #e0e0e0;
 }
 
+table.listing tr.hover {
+	background-color: #a2bbfc;
+}
+
 table.listing td {
 	padding: 0px 10px 0px 0px;
 }

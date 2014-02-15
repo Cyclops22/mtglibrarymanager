@@ -22,7 +22,8 @@
 			<thead>
 				<tr>
 					<th>&nbsp;</th>
-					<th>Set</th>
+					<th>&nbsp;</th>
+					<th>&nbsp;</th>
 					<th>&nbsp;</th>
 				</tr>
 			</thead>
@@ -32,7 +33,7 @@
 				<c:forEach var="currSet" items="${form.sets}" varStatus="status">
 					<c:if test="${currSet.referencedSet.category != lastGroup}">
 						<tr>
-							<td colspan="3">
+							<td colspan="4">
 								<h2><fmt:message key="expansion.detail.description.${currSet.referencedSet.category}" bundle="${bundle}"/></h2>
 							</td>
 						</tr>
@@ -51,6 +52,9 @@
 						</td>
 						<td>
 							<img src='<c:out value="${currSet.referencedSet.imageUrl}"/>'/>
+						</td>
+						<td>
+							<c:out value="${currSet.numberOfCards}" />
 						</td>
 					</tr>
 				</c:forEach>

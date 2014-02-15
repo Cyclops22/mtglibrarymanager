@@ -9,6 +9,16 @@ public class LibrarySetFormBean {
 	private int id;
 	private SetFormBean referencedSet;
 	private List<LibraryCardFormBean> cards;
+	
+	public String getNumberOfCards() {
+		int numberOfCards = 0;
+		
+		for (LibraryCardFormBean currLibraryCardFormBean : cards) {
+			numberOfCards += currLibraryCardFormBean.getQuantity() + currLibraryCardFormBean.getFoilQuantity();
+		}
+		
+		return String.valueOf(numberOfCards);
+	}
 
 	
 	public boolean isSelected() {

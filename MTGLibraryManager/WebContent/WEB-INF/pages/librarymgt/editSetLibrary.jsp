@@ -8,6 +8,8 @@
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 	<link type="text/css" rel="stylesheet" href="<c:url value="/css/style.css" />" />
+	<script src="http://code.jquery.com/jquery-1.11.0.js"></script>
+	
 	<title>Managing library set</title>
 </head>
 <body>
@@ -80,6 +82,12 @@
 </body>
 
 <script type="text/javascript">
+
+$( document ).ready(function() {
+	$('table.listing tbody tr').hover(function() {
+		$(this).toggleClass('hover');
+	});
+});
 
 function addQty(id) {
 	incrementValue(document.getElementById("Qty".concat(id)));
