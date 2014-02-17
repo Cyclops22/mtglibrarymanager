@@ -1,9 +1,15 @@
 package com.cyclops.library.mtg.controller;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -169,5 +175,24 @@ public class LibraryManagementController {
 		libraryMgtService.updateLibrarySetQuantities(librarySetBeanMapper.toBean(form));
 		
 		return "redirect:/librarymgt/" + libraryId + "/editLibrary.html";
+	}
+	
+	@RequestMapping(value = "/librarymgt/{libraryId}/exportlibrary", method = RequestMethod.GET)
+	public void exportLibrary(@PathVariable("libraryId") String libraryId, HttpServletResponse res) {
+		try {
+			OutputStream os = libraryMgtService.exportLibrary(Integer.parseInt(libraryId));
+			
+			ByteArrayOutputStream baos = (ByteArrayOutputStream) os;
+			byte[] baosArray = baos.toByteArray();
+			
+			res.setContentType("application/xls");
+	        res.setContentLength(baosArray.length);
+	        res.setHeader("Content-Disposition", "attachment; filename=Library.xls");
+			
+			IOUtils.write(baos.toByteArray(), res.getOutputStream());
+			
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 }

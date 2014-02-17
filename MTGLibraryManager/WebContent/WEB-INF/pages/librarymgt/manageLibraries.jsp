@@ -20,6 +20,7 @@
 				<tr>
 					<th>Id</th>
 					<th>Name</th>
+					<th>&nbsp;</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -30,6 +31,7 @@
 							<form:hidden path="libraries[${status.index}].id"/>
 						</td>
 						<td><a href="${currLibrary.id}/editLibrary.html"><c:out value="${currLibrary.name}"/></a></td>
+						<td><a href="${currLibrary.id}/exportlibrary.html">Export</a></td>
 					</tr>
 				</c:forEach>
 			</tbody>

@@ -8,6 +8,8 @@
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 	<link type="text/css" rel="stylesheet" href="<c:url value="/css/style.css" />" />
+	<script src="http://code.jquery.com/jquery-1.11.0.js"></script>
+	
 	<title>Managing ${form.name}</title>
 </head>
 <body>
@@ -24,11 +26,12 @@
 					<th>&nbsp;</th>
 					<th>&nbsp;</th>
 					<th>&nbsp;</th>
-					<th>&nbsp;</th>
+					<th id="total">&nbsp;</th>
 				</tr>
 			</thead>
 			<tbody>
 				<c:set var="lastGroup" value="" />
+				<c:set var="total" value="0" />
 				
 				<c:forEach var="currSet" items="${form.sets}" varStatus="status">
 					<c:if test="${currSet.referencedSet.category != lastGroup}">
@@ -55,6 +58,7 @@
 						</td>
 						<td>
 							<c:out value="${currSet.numberOfCards}" />
+							<c:set var="total" value="${total + currSet.numberOfCards}" />
 						</td>
 					</tr>
 				</c:forEach>
@@ -65,4 +69,12 @@
 		<form:hidden path="name" />
 	</form:form>
 </body>
+
+<script type="text/javascript">
+
+$( document ).ready(function() {
+	$('th#total').text(${total});
+});
+
+</script>
 </html>

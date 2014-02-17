@@ -1,5 +1,7 @@
 package com.cyclops.library.mtg.service;
 
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.List;
 
 import com.cyclops.library.mtg.domain.LibraryBean;
@@ -21,5 +23,5 @@ public interface LibraryMgtService {
 
 	void updateLibrarySetQuantities(LibrarySetBean bean);
 
-
+	OutputStream exportLibrary(int id) throws IOException;
 }

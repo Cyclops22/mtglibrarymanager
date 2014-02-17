@@ -1,5 +1,7 @@
 package com.cyclops.library.mtg.service;
 
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.cyclops.library.mtg.domain.LibraryBean;
 import com.cyclops.library.mtg.domain.LibrarySetBean;
 import com.cyclops.library.mtg.repository.LibraryMgtDAO;
+import com.cyclops.library.mtg.util.exporter.ExcelLibraryExporter;
 
 @Service("libraryMgtService")
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
@@ -56,5 +59,10 @@ public class LibraryMgtServiceImpl implements LibraryMgtService {
 	@Override
 	public void updateLibrarySetQuantities(LibrarySetBean bean) {
 		libraryMgtDAO.updateLibrarySetQuantities(bean);
+	}
+
+	@Override
+	public OutputStream exportLibrary(int id) throws IOException {
+		return ExcelLibraryExporter.export(findLibraryById(id));
 	}
 }
