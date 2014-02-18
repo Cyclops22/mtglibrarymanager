@@ -189,7 +189,7 @@ public class LibraryManagementController {
 	        res.setContentLength(baosArray.length);
 	        res.setHeader("Content-Disposition", "attachment; filename=Library.xls");
 			
-			IOUtils.write(baos.toByteArray(), res.getOutputStream());
+			IOUtils.write(baosArray, res.getOutputStream());
 			
 		} catch (IOException e) {
 			e.printStackTrace();
