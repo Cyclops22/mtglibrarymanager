@@ -15,6 +15,23 @@
 <body>
 	<fmt:setBundle basename="com.cyclops.library.mtg.resources.resources" var="bundle"/>
 	
+	<div id="filter">
+		<fieldset>
+			<legend>Filter</legend>
+			<div id="rarityFilter">
+				<input type="checkbox" name="Common">Common</input>
+				<input type="checkbox" name="Uncommon">Uncommon</input>
+				<input type="checkbox" name="Rare">Rare</input>
+				<input type="checkbox" name="Mythic Rare">Mythic Rare</input>
+			</div>
+			<div id="quantityFilter">
+				<input type="checkbox" name="quantities">With quantity</input>
+			</div>
+		</fieldset>
+	</div>
+	
+	<p>&nbsp;</p>
+	
 	<form:form commandName="form" action="submitSetLibrary.html">
 		<input type="submit" value="Save" />
 		<input type="button" value="Cancel" onclick="location.href='../editLibrary.html'" />
@@ -87,7 +104,68 @@ $( document ).ready(function() {
 	$('table.listing tbody tr').hover(function() {
 		$(this).toggleClass('hover');
 	});
+
+	$('div#filter div#rarityFilter input:checkbox').click(function() {
+		filterOnRarity();
+		toggleFiltered();
+		
+	});
+
+	$("div#filter div#quantityFilter input:checkbox[name='quantities']").click(function() {
+		filterOnQuantity();
+		toggleFiltered();
+	});
+		
+	
 });
+
+function filterOnRarity() {
+	$("div#filter div#rarityFilter input:checkbox").each(function() {
+		var rarity = $(this).attr("name");
+
+		if ($(this).is(":checked")) {
+			$("tr").filter(function() {
+				return $("td:nth-child(5)", this).text().trim() == rarity;
+			}).addClass("rarity_filtered");
+			
+		} else {
+			$("tr").filter(function() {
+				return $("td:nth-child(5)", this).text().trim() == rarity;
+			}).removeClass("rarity_filtered");
+		}
+	});
+}
+
+function filterOnQuantity() {
+	if ($("div#filter div#quantityFilter input:checkbox[name='quantities']").is(":checked")) {
+		
+		$("table.listing tbody tr").each(function(index) {
+			var sum = 0;
+			
+			$(":text", this).each(function() {
+				if(!isNaN(this.value) && this.value.length != 0) {
+	                sum += parseInt(this.value);
+	            }
+			});
+
+			if (sum == 0) {
+				$(this).addClass("quantity_filtered");
+				
+			} else {
+				$(this).removeClass("quantity_filtered");
+				
+			}
+		});
+		
+	} else {
+		$("table.listing tbody tr").removeClass("quantity_filtered");
+	}
+}
+
+function toggleFiltered() {
+	$("tr.rarity_filtered, tr.quantity_filtered").fadeOut();
+	$("tr:not(.rarity_filtered,.quantity_filtered)").fadeIn();
+}
 
 function addQty(id) {
 	incrementValue(document.getElementById("Qty".concat(id)));
