@@ -1,3 +1,8 @@
+div#filter, div#filter div.spacer {
+	padding-bottom: 10px;
+}
+
+
 table.listing {
 	border-spacing: 0px;
     border-collapse: separate;

@@ -17,20 +17,35 @@
 	
 	<div id="filter">
 		<fieldset>
-			<legend>Filter</legend>
-			<div id="rarityFilter">
+			<legend>
+				Filters
+				<input type="button" name="reversefilter" value="Reverse" />
+				<input type="button" name="resetfilter" value="Reset" />
+			</legend>
+			<div id="rarityFilter" class="spacer">
 				<input type="checkbox" name="Common">Common</input>
 				<input type="checkbox" name="Uncommon">Uncommon</input>
 				<input type="checkbox" name="Rare">Rare</input>
 				<input type="checkbox" name="Mythic Rare">Mythic Rare</input>
 			</div>
-			<div id="quantityFilter">
-				<input type="checkbox" name="quantities">With quantity</input>
+			<div id="colorFilter" class="spacer">
+				<div id="colors">
+					<input type="checkbox" name="W">White</input>
+					<input type="checkbox" name="U">Blue</input>
+					<input type="checkbox" name="B">Black</input>
+					<input type="checkbox" name="R">Red</input>
+					<input type="checkbox" name="G">Green</input>
+				</div>
+				<div id="colorlesses">
+					<input type="checkbox" name="C">Colorless</input>
+					<input type="checkbox" name="L">Land</input>
+				</div>
+			</div>
+			<div id="quantityFilter" class="spacer">
+				<input type="checkbox" name="quantities">Without quantity</input>
 			</div>
 		</fieldset>
 	</div>
-	
-	<p>&nbsp;</p>
 	
 	<form:form commandName="form" action="submitSetLibrary.html">
 		<input type="submit" value="Save" />
@@ -111,27 +126,80 @@ $( document ).ready(function() {
 		
 	});
 
+	$('div#filter div#colorFilter input:checkbox').click(function() {
+		filterOnColor();
+		toggleFiltered();
+		
+	});
+
 	$("div#filter div#quantityFilter input:checkbox[name='quantities']").click(function() {
 		filterOnQuantity();
 		toggleFiltered();
 	});
+
+	$("div#filter legend input:button[name='reversefilter']").click(function() {
+		$("div#filter input:checkbox").each(function() {
+			if (this.checked) {
+				$(this).prop("checked", false);
+				
+			} else {
+				$(this).prop("checked", true);
+			}
+		});
+
+		filterOnRarity();
+		filterOnColor();
+		filterOnQuantity();
 		
+		toggleFiltered();
+	});
+
+	$("div#filter legend input:button[name='resetfilter']").click(function() {
+		$("div#filter input:checkbox").each(function() {
+			$(this).prop("checked", false);
+		});
+
+		filterOnRarity();
+		filterOnColor();
+		filterOnQuantity();
+		
+		toggleFiltered();
+	});
 	
+
 });
 
 function filterOnRarity() {
 	$("div#filter div#rarityFilter input:checkbox").each(function() {
 		var rarity = $(this).attr("name");
 
-		if ($(this).is(":checked")) {
-			$("tr").filter(function() {
-				return $("td:nth-child(5)", this).text().trim() == rarity;
-			}).addClass("rarity_filtered");
+		$("table.listing tbody tr").filter(function() {
+			return $("td:nth-child(5)", this).text().trim() == rarity;
+		}).toggleClass("rarity_filtered", this.checked);
+	});
+}
+
+function filterOnColor() {
+	$("div#filter div#colorFilter div#colors input:checkbox").each(function(index) {
+		var color = $(this).attr("name");
+		filterColorRegEx = new RegExp(".*" + color + ".*");
+
+		$("table.listing tbody tr").filter(function() {
+			return $("td:nth-child(4)", this).text().trim().match(filterColorRegEx) != null;
+		}).toggleClass("color_filtered", this.checked);
+	});
+
+	$("div#filter div#colorFilter div#colorlesses input:checkbox").each(function() {
+		if ($(this).attr("name") == "C") {
+			$("table.listing tbody tr").filter(function() {
+				return $("td:nth-child(4)", this).text().trim().match(/^[0-9]+$/) != null;
+			}).toggleClass("color_filtered", this.checked);
+				
+		} else if ($(this).attr("name") == "L") {
+			$("table.listing tbody tr").filter(function() {
+				return $("td:nth-child(3)", this).text().trim().match(/\w* ?Land$/) != null;
+			}).toggleClass("color_filtered", this.checked);
 			
-		} else {
-			$("tr").filter(function() {
-				return $("td:nth-child(5)", this).text().trim() == rarity;
-			}).removeClass("rarity_filtered");
 		}
 	});
 }
@@ -148,23 +216,18 @@ function filterOnQuantity() {
 	            }
 			});
 
-			if (sum == 0) {
-				$(this).addClass("quantity_filtered");
-				
-			} else {
-				$(this).removeClass("quantity_filtered");
-				
-			}
+			$(this).toggleClass("quantity_filtered", sum == 0);
 		});
 		
 	} else {
 		$("table.listing tbody tr").removeClass("quantity_filtered");
+		
 	}
 }
 
 function toggleFiltered() {
-	$("tr.rarity_filtered, tr.quantity_filtered").fadeOut();
-	$("tr:not(.rarity_filtered,.quantity_filtered)").fadeIn();
+	$("table.listing tbody tr.rarity_filtered, table.listing tbody tr.quantity_filtered, table.listing tbody tr.color_filtered").fadeOut();
+	$("table.listing tbody tr:not(.rarity_filtered,.quantity_filtered,.color_filtered)").fadeIn();
 }
 
 function addQty(id) {
