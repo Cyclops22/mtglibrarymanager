@@ -8,5 +8,7 @@
 	<a href="setmgt/manageSets.html">Manage sets</a>
 	<br>
 	<a href="librarymgt/manageLibraries.html">Manage libraries</a>
+	<br>
+	<a href="deckmgt/manageDecks.html">Manage decks</a>
 </BODY>
 </HTML>

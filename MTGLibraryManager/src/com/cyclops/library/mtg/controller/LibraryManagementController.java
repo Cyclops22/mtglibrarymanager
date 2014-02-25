@@ -36,16 +36,16 @@ import com.cyclops.library.mtg.service.SetMgtService;
 public class LibraryManagementController {
 	
 	private LibraryMgtService libraryMgtService;
-	private SetMgtService mtgLibraryService;
+	private SetMgtService setMgtService;
 	
 	private LibraryFormBeanMapper libraryBeanMapper = new LibraryFormBeanMapper();
 	private SetFormBeanMapper setBeanMapper = new SetFormBeanMapper();
 	private LibrarySetFormBeanMapper librarySetBeanMapper = new LibrarySetFormBeanMapper();
 	
 	@Autowired
-	public LibraryManagementController(LibraryMgtService libraryMgtService, SetMgtService mtgLibraryService) {
+	public LibraryManagementController(LibraryMgtService libraryMgtService, SetMgtService setMgtService) {
 		this.libraryMgtService = libraryMgtService;
-		this.mtgLibraryService = mtgLibraryService;
+		this.setMgtService = setMgtService;
 	}
 	
 	@InitBinder
@@ -113,7 +113,7 @@ public class LibraryManagementController {
 			usedSets.add(currLibrarySetFormBean.getReferencedSet().getName());
 		}
 		
-		for (SetBean currSetBean : mtgLibraryService.findAll()) {
+		for (SetBean currSetBean : setMgtService.findAll()) {
 			if (!usedSets.contains(currSetBean.getName())) {
 				LibrarySetFormBean lsfb = new LibrarySetFormBean();
 				
