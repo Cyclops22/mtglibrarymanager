@@ -25,7 +25,7 @@ import com.cyclops.library.mtg.form.mapper.SetFormBeanMapper;
 import com.cyclops.library.mtg.service.SetMgtService;
 
 @Controller
-public class ManageSetsController {
+public class SetManagementController {
 	
 	private SetMgtService setMgtService;
 	
@@ -36,7 +36,7 @@ public class ManageSetsController {
 	private Map<String, SetFormBean> setFormBeanBySetName = new LinkedHashMap<>();
 	
 	@Autowired
-	public ManageSetsController(SetMgtService mtgLibraryService) {
+	public SetManagementController(SetMgtService mtgLibraryService) {
 		this.setMgtService = mtgLibraryService;
 	}
 
