@@ -4,6 +4,16 @@ import com.cyclops.library.mtg.domain.CardBean;
 import com.cyclops.library.mtg.form.bean.CardFormBean;
 
 public class CardFormBeanMapper extends AbstractFormBeanMapper<CardBean, CardFormBean> {
+	
+	private boolean useSimpleRarity;
+	
+	public CardFormBeanMapper() {
+		this(true);
+	}
+	
+	public CardFormBeanMapper(boolean useSimpleRarity) {
+		this.useSimpleRarity = useSimpleRarity;
+	}
 
 	@Override
 	public CardBean toBean(CardFormBean formBean) {
@@ -17,7 +27,7 @@ public class CardFormBeanMapper extends AbstractFormBeanMapper<CardBean, CardFor
 			card.setMana(formBean.getMana());
 			card.setName(formBean.getName());
 			card.setNumber(formBean.getNumber());
-			card.setRarity(formBean.getRarity());
+			card.setRarity(simplifyRarity(formBean.getRarity()));
 			card.setType(formBean.getType());
 			card.setUrl(formBean.getUrl());
 		}
@@ -37,12 +47,29 @@ public class CardFormBeanMapper extends AbstractFormBeanMapper<CardBean, CardFor
 			cardForm.setMana(bean.getMana());
 			cardForm.setName(bean.getName());
 			cardForm.setNumber(bean.getNumber());
-			cardForm.setRarity(bean.getRarity());
+			cardForm.setRarity(simplifyRarity(bean.getRarity()));
 			cardForm.setType(bean.getType());
 			cardForm.setUrl(bean.getUrl());
 		}
 		
 		return cardForm;
+	}
+	
+	private String simplifyRarity(String rarity) {
+		String simplifiedRarity = null;
+		
+		if (useSimpleRarity) {
+			int idx = rarity.indexOf('(');
+			if (idx != -1) {
+				simplifiedRarity = rarity.substring(0, idx).trim();
+				
+			} else {
+				simplifiedRarity = rarity;
+				
+			}
+		}
+		
+		return simplifiedRarity;
 	}
 
 }

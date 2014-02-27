@@ -1,7 +1,6 @@
 package com.cyclops.library.mtg.controller;
 
 import java.util.List;
-import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -14,11 +13,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.cyclops.library.mtg.form.DecksForm;
 import com.cyclops.library.mtg.form.bean.DeckFormBean;
+import com.cyclops.library.mtg.form.bean.EditionCardFormBean;
 import com.cyclops.library.mtg.form.mapper.DeckFormBeanMapper;
 import com.cyclops.library.mtg.form.mapper.EditionCardFormBeanMapper;
 import com.cyclops.library.mtg.service.DeckMgtService;
 import com.cyclops.library.mtg.service.SetMgtService;
-import com.cyclops.library.mtg.service.bean.EditionCardBean;
 
 @Controller
 public class DeckManagementController {
@@ -85,7 +84,7 @@ public class DeckManagementController {
 		
 		DeckFormBean form = deckFormBeanMapper.toFormBean(deckMgtService.findById(Integer.parseInt(deckId)));
 		
-		List<EditionCardBean> editionsCards = setMgtService.getAllCards();
+		List<EditionCardFormBean> editionsCards = editionCardFormBeanMapper.toFormBean(setMgtService.getAllCards());
 		
 		model.addAttribute("form", form);
 		model.addAttribute("cards", editionsCards);

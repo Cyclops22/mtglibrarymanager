@@ -6,7 +6,8 @@
 <html>
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-	<link type="text/css" rel="stylesheet" href="<c:url value="/css/style.css" />" />
+	<link type="text/css" rel="stylesheet" href="<c:url value="/resources/css/style.css" />" />
+	
 	<title>Create a new deck</title>
 </head>
 <body>

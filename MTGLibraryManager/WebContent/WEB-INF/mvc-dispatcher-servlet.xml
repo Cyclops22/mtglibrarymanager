@@ -8,11 +8,13 @@
 
 	<mvc:annotation-driven />
 	
+	<mvc:resources mapping="/resources/**" location="/resources/" />
+	
 	<context:component-scan base-package="com.cyclops.library.mtg.controller" />
 	<context:component-scan base-package="com.cyclops.library.mtg.service" />
 	
 	<context:annotation-config />
-
+	
 	<bean
 		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
 		<property name="prefix">

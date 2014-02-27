@@ -7,8 +7,11 @@
 <html>
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-	<link type="text/css" rel="stylesheet" href="<c:url value="/css/style.css" />" />
+	<link type="text/css" rel="stylesheet" href="<c:url value="/resources/css/style.css" />" />
+	
 	<script src="http://code.jquery.com/jquery-1.11.0.js"></script>
+	<script src="<c:url value="/resources/js/common.js" />"></script>
+	<script src="<c:url value="/resources/js/filtering.js" />"></script>
 	
 	<title>Managing library set</title>
 </head>
@@ -74,7 +77,7 @@
 			</thead>
 			<tbody>
 				<c:forEach var="currCard" items="${form.cards}" varStatus="status">
-					<tr class="${status.index % 2 == 0 ? 'even' : 'odd'}">
+					<tr>
 						<td>
 							<form:hidden path="cards[${status.index}].id"/>
 							<form:hidden path="cards[${status.index}].referencedCard.id"/>
@@ -120,115 +123,8 @@ $( document ).ready(function() {
 		$(this).toggleClass('hover');
 	});
 
-	$('div#filter div#rarityFilter input:checkbox').click(function() {
-		filterOnRarity();
-		toggleFiltered();
-		
-	});
-
-	$('div#filter div#colorFilter input:checkbox').click(function() {
-		filterOnColor();
-		toggleFiltered();
-		
-	});
-
-	$("div#filter div#quantityFilter input:checkbox[name='quantities']").click(function() {
-		filterOnQuantity();
-		toggleFiltered();
-	});
-
-	$("div#filter legend input:button[name='reversefilter']").click(function() {
-		$("div#filter input:checkbox").each(function() {
-			if (this.checked) {
-				$(this).prop("checked", false);
-				
-			} else {
-				$(this).prop("checked", true);
-			}
-		});
-
-		filterOnRarity();
-		filterOnColor();
-		filterOnQuantity();
-		
-		toggleFiltered();
-	});
-
-	$("div#filter legend input:button[name='resetfilter']").click(function() {
-		$("div#filter input:checkbox").each(function() {
-			$(this).prop("checked", false);
-		});
-
-		filterOnRarity();
-		filterOnColor();
-		filterOnQuantity();
-		
-		toggleFiltered();
-	});
-	
-
+	zebraRows($("table.listing tbody tr"));
 });
-
-function filterOnRarity() {
-	$("div#filter div#rarityFilter input:checkbox").each(function() {
-		var rarity = $(this).attr("name");
-
-		$("table.listing tbody tr").filter(function() {
-			return $("td:nth-child(5)", this).text().trim() == rarity;
-		}).toggleClass("rarity_filtered", this.checked);
-	});
-}
-
-function filterOnColor() {
-	$("div#filter div#colorFilter div#colors input:checkbox").each(function(index) {
-		var color = $(this).attr("name");
-		filterColorRegEx = new RegExp(".*" + color + ".*");
-
-		$("table.listing tbody tr").filter(function() {
-			return $("td:nth-child(4)", this).text().trim().match(filterColorRegEx) != null;
-		}).toggleClass("color_filtered", this.checked);
-	});
-
-	$("div#filter div#colorFilter div#colorlesses input:checkbox").each(function() {
-		if ($(this).attr("name") == "C") {
-			$("table.listing tbody tr").filter(function() {
-				return $("td:nth-child(4)", this).text().trim().match(/^[0-9]+$/) != null;
-			}).toggleClass("color_filtered", this.checked);
-				
-		} else if ($(this).attr("name") == "L") {
-			$("table.listing tbody tr").filter(function() {
-				return $("td:nth-child(3)", this).text().trim().match(/\w* ?Land$/) != null;
-			}).toggleClass("color_filtered", this.checked);
-			
-		}
-	});
-}
-
-function filterOnQuantity() {
-	if ($("div#filter div#quantityFilter input:checkbox[name='quantities']").is(":checked")) {
-		
-		$("table.listing tbody tr").each(function(index) {
-			var sum = 0;
-			
-			$(":text", this).each(function() {
-				if(!isNaN(this.value) && this.value.length != 0) {
-	                sum += parseInt(this.value);
-	            }
-			});
-
-			$(this).toggleClass("quantity_filtered", sum == 0);
-		});
-		
-	} else {
-		$("table.listing tbody tr").removeClass("quantity_filtered");
-		
-	}
-}
-
-function toggleFiltered() {
-	$("table.listing tbody tr.rarity_filtered, table.listing tbody tr.quantity_filtered, table.listing tbody tr.color_filtered").fadeOut();
-	$("table.listing tbody tr:not(.rarity_filtered,.quantity_filtered,.color_filtered)").fadeIn();
-}
 
 function addQty(id) {
 	incrementValue(document.getElementById("Qty".concat(id)));
