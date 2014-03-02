@@ -59,7 +59,7 @@
 		<table class="listing">
 			<thead>
 				<tr>
-					<th colspan="7"><h1>${form.referencedSet.name}</h1></th>
+					<th colspan="7"><h1>${form.referencedSet.name} <img src="${form.referencedSet.imageUrl}"></h1></th>
 				</tr>
 				<tr>
 					<th><fmt:message key="edit.set.library.form.label.card.number" bundle="${bundle}"/></th>

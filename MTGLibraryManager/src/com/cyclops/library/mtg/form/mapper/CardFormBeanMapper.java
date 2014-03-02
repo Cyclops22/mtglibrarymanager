@@ -1,5 +1,7 @@
 package com.cyclops.library.mtg.form.mapper;
 
+import org.apache.commons.lang3.StringUtils;
+
 import com.cyclops.library.mtg.domain.CardBean;
 import com.cyclops.library.mtg.form.bean.CardFormBean;
 
@@ -58,7 +60,7 @@ public class CardFormBeanMapper extends AbstractFormBeanMapper<CardBean, CardFor
 	private String simplifyRarity(String rarity) {
 		String simplifiedRarity = null;
 		
-		if (useSimpleRarity) {
+		if (useSimpleRarity && StringUtils.isNotBlank(rarity)) {
 			int idx = rarity.indexOf('(');
 			if (idx != -1) {
 				simplifiedRarity = rarity.substring(0, idx).trim();
