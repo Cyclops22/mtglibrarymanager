@@ -27,55 +27,75 @@ public class TCGPlayerParser extends SiteParser {
 	}
 
 	public List<SetBean> retrieveAllSets() throws IOException {
-		SetCategory category = SetCategory.EXPANSION;
-		SetBean mtgSet = null;
 		List<SetBean> mtgSets = new ArrayList<>();
 
 		Document doc = Jsoup.connect(SITE_INFO_URL).get();
 
-		Elements elements = doc.select("form + table td img, form + table td a, form + table td strong");
+		Elements tdsElement = doc.select("form + table tbody tr td");
 		
-		for (int i = 0; i < elements.size(); i++) {
-			Element currElement = elements.get(i);
-			
-			switch (currElement.tagName()) {
-			case "img":
-				mtgSet = new SetBean();
+		// First 2 tds contains Expansions
+		for (int i = 0; i < tdsElement.size(); i++) {
+			Element currTdElement = tdsElement.get(i);
+			if (i < 2) {
+				processUntitledTd(currTdElement, mtgSets);
 				
-				mtgSet.setLogoUrl(currElement.attr("src"));
-				mtgSet.setLanguage(Locale.ENGLISH.getLanguage());
-				mtgSet.setCategory(category);
+			} else {
+				processTitledTd(currTdElement, mtgSets);
 				
-				mtgSets.add(mtgSet);
-				
-				break;
-
-			case "a":
-				if (StringUtils.isNotBlank(currElement.text())) {
-					mtgSet.setName(currElement.text());
-					
-					mtgSet.setCategory(fromName(mtgSet.getName(), category));
-					
-					if (getUnwantedSetsName().contains(mtgSet.getName())) {
-						mtgSets.remove(mtgSets.size() - 1);
-					}
-				}
-				
-				break;
-				
-			case "strong":
-				category = fromText(currElement.text());
-				break;
-
-			default:
-				break;
 			}
 		}
 		
 		return mtgSets;
 	}
 	
-	private SetCategory fromText(String setCategoryDescription) {
+	private void processUntitledTd(Element tdElement, List<SetBean> mtgSets) {
+		Elements tdContentElements = tdElement.select("img, a");
+		for (int i = 0; i < tdContentElements.size(); i++) {
+			if ("img".equals(tdContentElements.get(i).tagName()) && "a".equals(tdContentElements.get(i + 1).tagName())) {
+				processSet(tdContentElements.get(i), tdContentElements.get(++i), mtgSets, SetCategory.EXPANSION);
+				
+			}
+		}
+	}
+	
+	private void processTitledTd(Element tdElement, List<SetBean> mtgSets) {
+		int index = 0;
+		Elements tdContentElements = tdElement.select("img, a, strong");
+		
+		// Navigate to the first category
+		while (!"strong".equals(tdContentElements.get(index).tagName())) {
+			index++;
+		}
+		
+		SetCategory category = null;
+		for (int i = index; i < tdContentElements.size(); i++) {
+			if ("strong".equals(tdContentElements.get(i).tagName())) {
+				category = determineCategoryFromText(tdContentElements.get(i).text());
+				
+			} else if ("img".equals(tdContentElements.get(i).tagName()) && "a".equals(tdContentElements.get(i + 1).tagName())) {
+				processSet(tdContentElements.get(i), tdContentElements.get(++i), mtgSets, category);
+				
+			}
+		}
+	}
+	
+	private void processSet(Element imageElement, Element aElement, List<SetBean> mtgSets, SetCategory category) {
+		String setName = aElement.text();
+		
+		if (StringUtils.isNotBlank(setName) && !getUnwantedSetsName().contains(setName)) {
+			SetBean mtgSet = new SetBean();
+			
+			mtgSet.setName(setName);
+			
+			mtgSet.setLogoUrl(imageElement.attr("src"));
+			mtgSet.setLanguage(Locale.ENGLISH.getLanguage());
+			mtgSet.setCategory(determineCategoryFromName(setName, category));
+			
+			mtgSets.add(mtgSet);
+		}
+	}
+	
+	private SetCategory determineCategoryFromText(String setCategoryDescription) {
 		SetCategory setCategory = null;
 		
 		switch (setCategoryDescription) {
@@ -94,7 +114,7 @@ public class TCGPlayerParser extends SiteParser {
 		return setCategory;
 	}
 	
-	private SetCategory fromName(String setName, SetCategory initialCategory) {
+	private SetCategory determineCategoryFromName(String setName, SetCategory initialCategory) {
 		SetCategory setCategory = initialCategory;
 		
 		if (setName.contains("From the Vault")) {

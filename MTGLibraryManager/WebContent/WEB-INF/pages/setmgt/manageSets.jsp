@@ -37,7 +37,7 @@
 					<c:if test="${currNewSet.category != newSetLastGroup}">
 						<tr>
 							<td colspan="6">
-								<fmt:message key="expansion.detail.description.${currNewSet.category}" bundle="${bundle}"/>
+								<h2><fmt:message key="expansion.detail.description.${currNewSet.category}" bundle="${bundle}"/></h2>
 							</td>
 						</tr>
 					</c:if>

@@ -60,16 +60,18 @@ public class SiteParser {
 			Map<Integer, List<SetBean>> setByLevenshtein = new TreeMap<>();
 			
 			for (SetBean currSetBean : formSetByName.values()) {
-				int distance = StringUtils.getLevenshteinDistance(setName, currSetBean.getName());
-				
-				List<SetBean> setsWithDistance = setByLevenshtein.get(distance);
-				if (setsWithDistance == null) {
-					setsWithDistance = new ArrayList<>();
+				if (currSetBean.getName() != null) {
+					int distance = StringUtils.getLevenshteinDistance(setName, currSetBean.getName());
+					
+					List<SetBean> setsWithDistance = setByLevenshtein.get(distance);
+					if (setsWithDistance == null) {
+						setsWithDistance = new ArrayList<>();
+					}
+					
+					setsWithDistance.add(currSetBean);
+					
+					setByLevenshtein.put(distance, setsWithDistance);
 				}
-				
-				setsWithDistance.add(currSetBean);
-				
-				setByLevenshtein.put(distance, setsWithDistance);
 			}
 			
 			
