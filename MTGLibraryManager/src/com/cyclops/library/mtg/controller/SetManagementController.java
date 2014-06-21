@@ -72,6 +72,9 @@ public class SetManagementController {
 			}
 			
 			newSetsForm.setSets(DisplaySetFormBeanSorter.sortForDisplay(sets));
+			for (SetFormBean currSetFormBean : newSetsForm.getSets()) {
+				currSetFormBean.setSelected(true);
+			}
 			
 			setFormBeanBySetName.clear();
 			for (SetFormBean currSetFormBean : newSetsForm.getSets()) {
@@ -103,10 +106,14 @@ public class SetManagementController {
 	
 	@RequestMapping(value = "/setmgt/submitMTGSets", params = "Save", method = RequestMethod.POST)
 	public String saveMTGSets(@ModelAttribute("newSetsForm") SetsForm newSetsForm, BindingResult result, Model model) {
-		for (SetBean currSet : setFormBeanMapper.toBean(newSetsForm.getSets())) {
-			currSet.getCards().addAll(cardFormBeanMapper.toBean(setFormBeanBySetName.get(currSet.getName()).getCards()));
-			
-			setMgtService.addMTGSet(currSet);
+		for (SetFormBean currSetFormBean : newSetsForm.getSets()) {
+			if (currSetFormBean.isSelected()) {
+				SetBean currSet = setFormBeanMapper.toBean(currSetFormBean);
+				
+				currSet.getCards().addAll(cardFormBeanMapper.toBean(setFormBeanBySetName.get(currSet.getName()).getCards()));
+				
+				setMgtService.addMTGSet(currSet);
+			}
 		}
 		
 		return "redirect:/setmgt/manageSets.html";

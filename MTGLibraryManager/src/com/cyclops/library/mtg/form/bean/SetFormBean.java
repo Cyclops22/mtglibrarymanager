@@ -15,6 +15,7 @@ public class SetFormBean {
 	private String url;
 	private String imageUrl;
 	private String releaseDate;
+	private boolean selected;
 	
 	private List<CardFormBean> cards = new ArrayList<>();
 
@@ -88,5 +89,13 @@ public class SetFormBean {
 
 	public void setCards(List<CardFormBean> cards) {
 		this.cards = cards;
+	}
+
+	public boolean isSelected() {
+		return selected;
+	}
+
+	public void setSelected(boolean selected) {
+		this.selected = selected;
 	}
 }

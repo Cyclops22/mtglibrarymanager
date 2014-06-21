@@ -22,6 +22,7 @@
 		<table>
 			<thead>
 				<tr>
+					<th>&nbsp;</th>
 					<th>Set</th>
 					<th>&nbsp;</th>
 					<th>&nbsp;</th>
@@ -36,7 +37,7 @@
 				<c:forEach var="currNewSet" items="${newSetsForm.sets}" varStatus="status">
 					<c:if test="${currNewSet.category != newSetLastGroup}">
 						<tr>
-							<td colspan="6">
+							<td colspan="7">
 								<h2><fmt:message key="expansion.detail.description.${currNewSet.category}" bundle="${bundle}"/></h2>
 							</td>
 						</tr>
@@ -55,8 +56,9 @@
 							<form:hidden path="sets[${status.index}].url"/>
 							<form:hidden path="sets[${status.index}].imageUrl"/>
 							
-							<c:out value="${currNewSet.name}"/>
+							<form:checkbox path="sets[${status.index}].selected"/>
 						</td>
+						<td><c:out value="${currNewSet.name}"/></td>
 						<td>${currNewSet.abbreviation}</td>
 						<td><img src="${currNewSet.imageUrl}"></td>
 						<td>${currNewSet.url}</td>
