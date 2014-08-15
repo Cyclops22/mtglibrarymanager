@@ -10,6 +10,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,6 +25,9 @@ import com.cyclops.library.mtg.domain.SetBean;
 public class LibraryMgtDAOImpl implements LibraryMgtDAO {
 	
 	private EntityManager em;
+	
+	@Autowired
+	private SetMgtDAO setMgtDao;
 	 
     public EntityManager getEm() {
         return em;
@@ -42,7 +46,7 @@ public class LibraryMgtDAOImpl implements LibraryMgtDAO {
     	List<LibraryCardBean> cards = new ArrayList<>();
     	
     	LibraryBean library = findLibraryById(libraryId);
-		SetBean set = findSetById(setId);
+		SetBean set = setMgtDao.findById(setId);
 		
 		for (CardBean currSetCard : set.getCards()) {
 			LibraryCardBean libraryCardBean = new LibraryCardBean();
@@ -88,11 +92,6 @@ public class LibraryMgtDAOImpl implements LibraryMgtDAO {
 		return em.find(LibraryBean.class, id);
 	}
 	
-	@Override
-	public SetBean findSetById(int id) {
-		return em.find(SetBean.class, id);
-	}
-
 	@Override
 	public LibrarySetBean findLibrarySetById(int id) {
 		return em.find(LibrarySetBean.class, id);

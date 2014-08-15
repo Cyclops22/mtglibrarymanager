@@ -2,19 +2,15 @@ package com.cyclops.library.mtg.domain;
 
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import javax.validation.constraints.NotNull;
 
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
@@ -26,23 +22,22 @@ public class SetBean {
 	@GeneratedValue
 	private int id;
 
-	@NotNull
 	private String name;
 	
-	@Enumerated(EnumType.STRING)
-	private SetCategory category;
+	private String code;
 	
-	private String abbreviation;
+	private String gathererCode;
 	
-	@NotNull
-	private String language = Locale.ENGLISH.getLanguage();
-	
-	private String url;
-	
-	private String logoUrl;
+	private String oldCode;
 	
 	@Temporal(TemporalType.DATE)
 	private Date releaseDate;
+	
+	private String border;
+	
+	private String setType;
+	
+	private String block;
 	
 	@OneToMany(cascade = { CascadeType.ALL }, orphanRemoval = true)
 	@JoinColumn(name="set_id")
@@ -70,44 +65,28 @@ public class SetBean {
 		this.name = name;
 	}
 
-	public SetCategory getCategory() {
-		return category;
+	public String getCode() {
+		return code;
 	}
 
-	public void setCategory(SetCategory category) {
-		this.category = category;
+	public void setCode(String code) {
+		this.code = code;
 	}
 
-	public String getAbbreviation() {
-		return abbreviation;
+	public String getGathererCode() {
+		return gathererCode;
 	}
 
-	public void setAbbreviation(String abbreviation) {
-		this.abbreviation = abbreviation;
+	public void setGathererCode(String gathererCode) {
+		this.gathererCode = gathererCode;
 	}
 
-	public String getLanguage() {
-		return language;
+	public String getOldCode() {
+		return oldCode;
 	}
 
-	public void setLanguage(String language) {
-		this.language = language;
-	}
-
-	public String getUrl() {
-		return url;
-	}
-
-	public void setUrl(String url) {
-		this.url = url;
-	}
-
-	public String getLogoUrl() {
-		return logoUrl;
-	}
-
-	public void setLogoUrl(String logoUrl) {
-		this.logoUrl = logoUrl;
+	public void setOldCode(String oldCode) {
+		this.oldCode = oldCode;
 	}
 
 	public Date getReleaseDate() {
@@ -116,6 +95,30 @@ public class SetBean {
 
 	public void setReleaseDate(Date releaseDate) {
 		this.releaseDate = releaseDate;
+	}
+
+	public String getBorder() {
+		return border;
+	}
+
+	public void setBorder(String border) {
+		this.border = border;
+	}
+
+	public String getSetType() {
+		return setType;
+	}
+
+	public void setSetType(String setType) {
+		this.setType = setType;
+	}
+
+	public String getBlock() {
+		return block;
+	}
+
+	public void setBlock(String block) {
+		this.block = block;
 	}
 
 	public List<CardBean> getCards() {

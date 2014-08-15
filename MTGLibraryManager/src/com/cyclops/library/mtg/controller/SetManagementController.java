@@ -1,11 +1,9 @@
 package com.cyclops.library.mtg.controller;
 
-import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -16,12 +14,12 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import com.cyclops.library.mtg.comparator.DisplaySetFormBeanSorter;
-import com.cyclops.library.mtg.domain.SetBean;
+import com.cyclops.library.mtg.comparator.CardNumberCardFormBeanComparator;
+import com.cyclops.library.mtg.comparator.ReleaseDateSetFormBeanComparator;
+import com.cyclops.library.mtg.form.ImportSetsForm;
 import com.cyclops.library.mtg.form.SetsForm;
+import com.cyclops.library.mtg.form.bean.ImportSetFormBean;
 import com.cyclops.library.mtg.form.bean.SetFormBean;
-import com.cyclops.library.mtg.form.mapper.CardFormBeanMapper;
-import com.cyclops.library.mtg.form.mapper.SetFormBeanMapper;
 import com.cyclops.library.mtg.service.SetMgtService;
 
 @Controller
@@ -29,109 +27,67 @@ public class SetManagementController {
 	
 	private SetMgtService setMgtService;
 	
-	private SetFormBeanMapper setFormBeanMapper = new SetFormBeanMapper();
-	private CardFormBeanMapper cardFormBeanMapper = new CardFormBeanMapper();
-	
-	private SetsForm workForm;
-	private Map<String, SetFormBean> setFormBeanBySetName = new LinkedHashMap<>();
-	
 	@Autowired
 	public SetManagementController(SetMgtService mtgLibraryService) {
 		this.setMgtService = mtgLibraryService;
 	}
 
 	@RequestMapping(value = "/setmgt/manageSets", method = RequestMethod.GET)
-	public String displaySets(Model model) {
+	public String navigateToDisplaySets(Model model) {
 		
-		workForm = new SetsForm();
-		workForm.setSets(DisplaySetFormBeanSorter.sortForDisplay(setFormBeanMapper.toFormBean(setMgtService.findAll())));
+		List<SetFormBean> setFormBeans = setMgtService.findAll();
+		List<ImportSetFormBean> importSetFormBeans = setMgtService.getAvailableSets();
 		
-		model.addAttribute("form", workForm);
-		model.addAttribute("newSetsForm", new SetsForm());
-		
-		return "setmgt/manageSets";
-	}
-	
-	@RequestMapping(value = "/setmgt/retrieveNewSets", method = RequestMethod.GET)
-	public String retrieveNewSets(Model model) {
-		List<String> persistedSets = new ArrayList<>();
-		SetsForm newSetsForm = new SetsForm();
-		
-		for (SetFormBean currSet : workForm.getSets()) {
-			persistedSets.add(currSet.getName());
-		}
-		
-		try {
-			List<SetFormBean> sets = setFormBeanMapper.toFormBean(setMgtService.retrieveAllSets());
-			for (Iterator<SetFormBean> iter = sets.iterator(); iter.hasNext(); ) {
-				SetFormBean currSetFormBean = iter.next();
-				
-				if (persistedSets.contains(currSetFormBean.getName())) {
+		for (Iterator<ImportSetFormBean> iter = importSetFormBeans.iterator(); iter.hasNext(); ) {
+			ImportSetFormBean currImportSetFormBean = iter.next();
+			
+			for (SetFormBean currSetFormBean : setFormBeans) {
+				if (currSetFormBean.getCode().equals(currImportSetFormBean.getCode())) {
 					iter.remove();
+					break;
 				}
 			}
-			
-			newSetsForm.setSets(DisplaySetFormBeanSorter.sortForDisplay(sets));
-			for (SetFormBean currSetFormBean : newSetsForm.getSets()) {
-				currSetFormBean.setSelected(true);
-			}
-			
-			setFormBeanBySetName.clear();
-			for (SetFormBean currSetFormBean : newSetsForm.getSets()) {
-				setFormBeanBySetName.put(currSetFormBean.getName(), currSetFormBean);
-			}
-			
-			model.addAttribute("form", workForm);
-			model.addAttribute("newSetsForm", newSetsForm);
-			
-		} catch (IOException e) {
-			e.printStackTrace();
 		}
+		
+		Collections.sort(setFormBeans, new ReleaseDateSetFormBeanComparator());
+				
+		ImportSetsForm importSetsForm = new ImportSetsForm();
+		importSetsForm.setImportSetFormBeans(importSetFormBeans);
+		
+		SetsForm setsForm = new SetsForm();
+		setsForm.setSets(setFormBeans);
+		
+		model.addAttribute("setsForm", setsForm);
+		model.addAttribute("importSetsForm", importSetsForm); 
 		
 		return "setmgt/manageSets";
 	}
 	
-	@RequestMapping(value = "/setmgt/{setName}/displaySet", method = RequestMethod.GET)
-	public String displaySet(@PathVariable("setName") String setName, Model model) {
+	@RequestMapping(value = "/setmgt/importSets", method = RequestMethod.POST)
+	public String importSets(@ModelAttribute("importSetsForm") ImportSetsForm importSetsForm, BindingResult result, Model model) {
+		List<ImportSetFormBean> setBeans = new ArrayList<>();
 		
-		for (SetFormBean currSet : workForm.getSets()) {
-			if (setName.equals(currSet.getName())) {
-				model.addAttribute("cards", currSet.getCards());
-				break;
+		for (ImportSetFormBean currImportSetFormBean : importSetsForm.getImportSetFormBeans()) {
+			if (currImportSetFormBean.isSelected()) {
+				setBeans.add(currImportSetFormBean);
 			}
 		}
 		
-		return "setmgt/setDetails";
-	}
-	
-	@RequestMapping(value = "/setmgt/submitMTGSets", params = "Save", method = RequestMethod.POST)
-	public String saveMTGSets(@ModelAttribute("newSetsForm") SetsForm newSetsForm, BindingResult result, Model model) {
-		for (SetFormBean currSetFormBean : newSetsForm.getSets()) {
-			if (currSetFormBean.isSelected()) {
-				SetBean currSet = setFormBeanMapper.toBean(currSetFormBean);
-				
-				currSet.getCards().addAll(cardFormBeanMapper.toBean(setFormBeanBySetName.get(currSet.getName()).getCards()));
-				
-				setMgtService.addMTGSet(currSet);
-			}
+		if (!setBeans.isEmpty()) {
+			setMgtService.addSets(setBeans);
 		}
 		
 		return "redirect:/setmgt/manageSets.html";
 	}
-
-	public SetFormBeanMapper getSetFormBeanMapper() {
-		return setFormBeanMapper;
-	}
-
-	public void setSetFormBeanMapper(SetFormBeanMapper setFormBeanMapper) {
-		this.setFormBeanMapper = setFormBeanMapper;
-	}
-
-	public CardFormBeanMapper getCardFormBeanMapper() {
-		return cardFormBeanMapper;
-	}
-
-	public void setCardFormBeanMapper(CardFormBeanMapper cardFormBeanMapper) {
-		this.cardFormBeanMapper = cardFormBeanMapper;
+	
+	@RequestMapping(value = "/setmgt/{setCode}/displaySet", method = RequestMethod.GET)
+	public String navigateToDisplaySet(@PathVariable("setCode") String setCode, Model model) {
+		SetFormBean setFormBean = setMgtService.getSetByCode(setCode);
+		
+		Collections.sort(setFormBean.getCards(), new CardNumberCardFormBeanComparator());
+		
+		model.addAttribute("set", setFormBean);
+		
+		return "setmgt/setDetails";
 	}
 }

@@ -7,13 +7,14 @@
 <html>
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-	<link type="text/css" rel="stylesheet" href="<c:url value="/resources/css/style.css" />" />
+	<title>Managing library set</title>
 	
 	<script src="http://code.jquery.com/jquery-1.11.0.js"></script>
 	<script src="<c:url value="/resources/js/common.js" />"></script>
 	<script src="<c:url value="/resources/js/filtering.js" />"></script>
 	
-	<title>Managing library set</title>
+	<link type="text/css" rel="stylesheet" href="<c:url value="/resources/css/style.css" />" />
+	<link type="text/css" rel="stylesheet" href="<c:url value="/resources/css/hoverbox.css" />" />
 </head>
 <body>
 	<fmt:setBundle basename="com.cyclops.library.mtg.resources.resources" var="bundle"/>
@@ -22,8 +23,8 @@
 		<fieldset>
 			<legend>
 				Filters
-				<input type="button" name="reversefilter" value="Reverse" />
-				<input type="button" name="resetfilter" value="Reset" />
+				<img id="reversefilter" src="" alt="Reverse"/>
+				<img id="resetfilter" src="" alt="Reset"/>
 			</legend>
 			<div id="rarityFilter" class="spacer">
 				<input type="checkbox" name="Common">Common</input>
@@ -50,16 +51,19 @@
 		</fieldset>
 	</div>
 	
-	<form:form commandName="form" action="submitSetLibrary.html">
-		<input type="submit" value="Save" />
-		<input type="button" value="Cancel" onclick="location.href='../editLibrary.html'" />
+	<form:form commandName="form" action="editSetLibrary.html">
+		<img id="save" src="" alt="Save"/>
+		<img id="cancel" src="" alt="Cancel"/>
+		
+		<!-- <input type="submit" value="Save" />
+		<input type="button" value="Cancel" onclick="location.href='../editLibrary.html'" /> -->
 		
 		<form:hidden path="id" />
 		
-		<table class="listing">
+		<table class="listing hoverbox">
 			<thead>
 				<tr>
-					<th colspan="7"><h1>${form.referencedSet.name} <img src="${form.referencedSet.imageUrl}"></h1></th>
+					<th colspan="7"><h1>${form.referencedSet.name}</h1></th>
 				</tr>
 				<tr>
 					<th><fmt:message key="edit.set.library.form.label.card.number" bundle="${bundle}"/></th>
@@ -86,15 +90,31 @@
 							<c:out value="${currCard.referencedCard.number}"/>
 						</td>
 						<td>
-							<a href="<c:out value='${currCard.referencedCard.url}'/>" target="_blank">
-								<c:out value="${currCard.referencedCard.name}"/>
-							</a>
+							<span class="preview">
+								<c:choose>
+								    <c:when test="${empty form.referencedSet.code}">
+								    	<c:set var="code" value="${fn:toLowerCase(form.referencedSet.gatherercode)}" />
+								        
+								    </c:when>
+								    <c:otherwise>
+								        <c:set var="code" value="${fn:toLowerCase(form.referencedSet.code)}" />
+								        
+								    </c:otherwise>
+								</c:choose>
+							
+								<a href="http://magiccards.info/${code}/en/${currCard.referencedCard.number}.html" target="_blank">
+									<c:out value="${currCard.referencedCard.name}"/>
+								</a>
+								<img src="#" class="preview" multiverseid="${currCard.referencedCard.multiverseid}"/>
+							</span>
 						</td>
 						<td>
 							<c:out value="${currCard.referencedCard.type}"/>
 						</td>
 						<td>
-							<c:out value="${currCard.referencedCard.mana}"/>
+							<c:forEach var="cost" items="${currCard.referencedCard.manaCostElements}">
+								<img src="http://mtgimage.com/symbol/mana/${cost}/16.png" alt="${cost}" />
+							</c:forEach>
 						</td>
 						<td>
 							<c:out value="${currCard.referencedCard.rarity}"/>
@@ -124,6 +144,19 @@ $( document ).ready(function() {
 	});
 
 	zebraRows($("table.listing tbody tr"));
+
+	$("img#save").click(function() {
+		$("form#form").submit();
+	});
+
+	$("img#cancel").click(function() {
+		window.location.href = "<c:url value='../editLibrary.html' />";
+	});
+
+	$("span.preview").mouseenter(function() {
+		var multiverseId = $("img", $(this)).attr("multiverseid");
+		$("img", $(this)).attr("src", "http://mtgimage.com/multiverseid/" + multiverseId + ".jpg");
+	});
 });
 
 function addQty(id) {

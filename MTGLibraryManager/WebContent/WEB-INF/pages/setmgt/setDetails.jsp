@@ -6,10 +6,15 @@
     "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>magiccards.info site</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+	<script src="http://code.jquery.com/jquery-1.11.0.js"></script>
+	<title>${set.name}</title>
 </head>
 <body>
+	<img id="back" src="" alt="Back"/>
+
+	<h1>${set.name}</h1>
 	<table>
 		<thead>
 			<tr>
@@ -21,15 +26,29 @@
 			</tr>
 		</thead>
 		<tbody>
-			<c:forEach var="card" items="${cards}">
+			<c:forEach var="card" items="${set.cards}">
 				<tr>
 					<td>${card.number}</td>
-					<td><a href='${card.url}' target="_blank">${card.name}</a></td>
+					<td>${card.name}</td>
 					<td>${card.type}</td>
-					<td>${card.mana}</td>
+					<td>
+						<c:forEach var="cost" items="${card.manaCostElements}">
+							<img src="http://mtgimage.com/symbol/mana/${cost}/16.png" alt="${cost}" />
+						</c:forEach>
+					</td>
 					<td>${card.rarity}</td>
 			</c:forEach>
 		</tbody>
 	</table>
 </body>
+
+<script type="text/javascript">
+
+$(document).ready(function() {
+	$("img#back").click(function() {
+		window.location.href = "<c:url value='/setmgt/manageSets.html' />";
+	});
+});
+
+</script>
 </html>

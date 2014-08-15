@@ -7,107 +7,112 @@
     "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>Sets management</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<title>Sets management</title>
+	
+	<link rel="stylesheet" href="http://code.jquery.com/ui/1.11.0/themes/smoothness/jquery-ui.css">
+	
+	<script src="http://code.jquery.com/jquery-1.11.0.js"></script>
+	<script src="//code.jquery.com/ui/1.11.0/jquery-ui.js"></script>
 </head>
 <body>
 	<fmt:setBundle basename="com.cyclops.library.mtg.resources.resources" var="bundle"/>
 	
-	<a href="retrieveNewSets.html">Retrieve sets</a>
-
-	<form:form commandName="newSetsForm" action="submitMTGSets.html">
-		<input type="submit" name="Save" value="Save sets" />
-		
-		<h1>New sets</h1>
-		<table>
-			<thead>
-				<tr>
-					<th>&nbsp;</th>
-					<th>Set</th>
-					<th>&nbsp;</th>
-					<th>&nbsp;</th>
-					<th>Url</th>
-					<th>Number of cards</th>
-					<th>Release date</th>
-				</tr>
-			</thead>
-			<tbody>
-				<c:set var="newSetLastGroup" />
-				
-				<c:forEach var="currNewSet" items="${newSetsForm.sets}" varStatus="status">
-					<c:if test="${currNewSet.category != newSetLastGroup}">
-						<tr>
-							<td colspan="7">
-								<h2><fmt:message key="expansion.detail.description.${currNewSet.category}" bundle="${bundle}"/></h2>
-							</td>
-						</tr>
-					</c:if>
-					
-					<c:set var="newSetLastGroup" value="${currNewSet.category}" />
-					
-					<tr>
-						<td>
-							<form:hidden path="sets[${status.index}].id"/>
-							<form:hidden path="sets[${status.index}].name"/>
-							<form:hidden path="sets[${status.index}].abbreviation"/>
-							<form:hidden path="sets[${status.index}].category"/>
-							<form:hidden path="sets[${status.index}].language"/>
-							<form:hidden path="sets[${status.index}].releaseDate"/>
-							<form:hidden path="sets[${status.index}].url"/>
-							<form:hidden path="sets[${status.index}].imageUrl"/>
-							
-							<form:checkbox path="sets[${status.index}].selected"/>
-						</td>
-						<td><c:out value="${currNewSet.name}"/></td>
-						<td>${currNewSet.abbreviation}</td>
-						<td><img src="${currNewSet.imageUrl}"></td>
-						<td>${currNewSet.url}</td>
-						<td>${fn:length(currNewSet.cards)}</td>
-						<td>${currNewSet.releaseDate}</td>
-					</tr>
-				</c:forEach>
-			</tbody>
-		</table>
-	</form:form>
+	<img id="import" src="" alt="Import sets"/>
+	<img id="back" src="" alt="Back"/>
 	
-	<h1>Sets</h1>
+	<h1>Imported sets</h1>
 	<table>
 		<thead>
 			<tr>
-				<th>Set</th>
+				<th>Name</th>
 				<th>&nbsp;</th>
-				<th>&nbsp;</th>
-				<th>Url</th>
-				<th>Number of cards</th>
 				<th>Release date</th>
+				<th>Number of cards</th>
 			</tr>
 		</thead>
 		<tbody>
-			<c:set var="lastGroup" value="" />
-			
-			<c:forEach var="currSet" items="${form.sets}" varStatus="status">
-				<c:if test="${currSet.category != lastGroup}">
-					<tr>
-						<td colspan="6">
-							<h2><fmt:message key="expansion.detail.description.${currSet.category}" bundle="${bundle}"/></h2>
-						</td>
-					</tr>
-				</c:if>
-				
-				<c:set var="lastGroup" value="${currSet.category}" />
-			
+			<c:forEach var="currSet" items="${setsForm.sets}" varStatus="status">
 				<tr>
-					<td>
-						<a href='<c:out value="${currSet.name}"/>/displaySet.html'><c:out value="${currSet.name}"/></a>
-					</td>
-					<td>${currSet.abbreviation}</td>
-					<td><img src="${currSet.imageUrl}"></td>
-					<td>${currSet.url}</td>
+					<td><a href="${currSet.code}/displaySet.html"><c:out value="${currSet.name}"/></a></td>
+					<td><img src="http://mtgimage.com/symbol/set/${currSet.code}/c/16.png"/></td>
+					<td><c:out value="${currSet.releaseDate}"/></td>
 					<td>${fn:length(currSet.cards)}</td>
-					<td>${currSet.releaseDate}</td>
 				</tr>
 			</c:forEach>
 		</tbody>
 	</table>
+	
+	<div id="importSetsDlg" title="Import sets" style="display: none;">
+		<form:form commandName="importSetsForm" action="importSets.html">
+			<div>Select sets to import</div>
+		  	
+		  	<table>
+				<thead>
+					<tr>
+						<th>&nbsp;</th>
+						<th>Name</th>
+						<th>Release date</th>
+					</tr>
+				</thead>
+				<tbody>
+					<c:forEach var="currImportSetFormBean" items="${importSetsForm.importSetFormBeans}" varStatus="status">
+						<tr>
+							<td>
+								<form:hidden path="importSetFormBeans[${status.index}].code"/>
+								<form:hidden path="importSetFormBeans[${status.index}].name"/>
+								<form:hidden path="importSetFormBeans[${status.index}].releaseDate"/>
+							
+								<form:checkbox path="importSetFormBeans[${status.index}].selected"/>
+							</td>
+							<td><c:out value="${currImportSetFormBean.name}"/></td>
+							<td><c:out value="${currImportSetFormBean.releaseDate}"/></td>
+						</tr>
+					</c:forEach>
+				</tbody>
+			</table>
+		</form:form>
+	</div>
 </body>
+
+<script type="text/javascript">
+
+$(document).ready(function() {
+	$("#importSetsDlg").dialog({
+	    autoOpen: false,
+	    modal: true,
+	    resizable: false,
+		height:768,
+	    width: 720,
+	    close: function() {
+	    	$("tbody", $(this)).empty();
+		},
+	    buttons: [ 
+	      	{
+				text: "Import",
+				width: 95,
+				click: function() {
+					$('form#importSetsForm').submit();
+				}
+	      	},
+			{
+				text: "Cancel",
+				width: 95,
+				click: function() {
+					$(this).dialog("close");
+				}
+			}
+		]
+ 	});
+
+	$("img#import").click(function() {
+		$("#importSetsDlg").dialog("open");
+	});
+
+	$("img#back").click(function() {
+		window.location.href = "<c:url value='/' />";
+	});
+});
+
+</script>
 </html>

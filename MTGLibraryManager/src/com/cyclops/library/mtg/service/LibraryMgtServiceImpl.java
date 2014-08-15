@@ -9,10 +9,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.cyclops.library.mtg.domain.LibraryBean;
-import com.cyclops.library.mtg.domain.LibrarySetBean;
+import com.cyclops.library.mtg.form.bean.LibraryFormBean;
+import com.cyclops.library.mtg.form.bean.LibrarySetFormBean;
+import com.cyclops.library.mtg.form.mapper.LibraryFormBeanMapper;
+import com.cyclops.library.mtg.form.mapper.LibrarySetFormBeanMapper;
 import com.cyclops.library.mtg.repository.LibraryMgtDAO;
-import com.cyclops.library.mtg.util.exporter.ExcelLibraryExporter;
 
 @Service("libraryMgtService")
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
@@ -21,14 +22,25 @@ public class LibraryMgtServiceImpl implements LibraryMgtService {
 	private LibraryMgtDAO libraryMgtDAO;
 	
 	@Autowired
+	private LibraryFormBeanMapper libraryBeanMapper;
+	
+	@Autowired
+	private LibrarySetFormBeanMapper librarySetBeanMapper;
+	
+	@Autowired
 	public LibraryMgtServiceImpl(LibraryMgtDAO libraryMgtDAO) {
 		this.libraryMgtDAO = libraryMgtDAO;
 	}
 	
 	@Override
+	public List<LibraryFormBean> findAllLibraries() {
+		return libraryBeanMapper.toFormBean(libraryMgtDAO.findAllLibraries());
+	}
+
+	@Override
 	@Transactional(propagation = Propagation.REQUIRED, readOnly = true)
-	public void addLibrary(LibraryBean libraryBean) {
-		libraryMgtDAO.createLibrary(libraryBean);
+	public void addLibrary(LibraryFormBean libraryFormBean) {
+		libraryMgtDAO.createLibrary(libraryBeanMapper.toBean(libraryFormBean));
 	}
 	
 	@Override
@@ -37,13 +49,8 @@ public class LibraryMgtServiceImpl implements LibraryMgtService {
 	}
 	
 	@Override
-	public List<LibraryBean> findAllLibraries() {
-		return libraryMgtDAO.findAllLibraries();
-	}
-
-	@Override
-	public LibraryBean findLibraryById(int id) {
-		return libraryMgtDAO.findLibraryById(id);
+	public LibraryFormBean findLibraryById(int id) {
+		return libraryBeanMapper.toFormBean(libraryMgtDAO.findLibraryById(id));
 	}
 	
 	@Override
@@ -52,17 +59,18 @@ public class LibraryMgtServiceImpl implements LibraryMgtService {
 	}
 	
 	@Override
-	public LibrarySetBean findLibrarySetById(int id) {
-		return libraryMgtDAO.findLibrarySetById(id);
+	public LibrarySetFormBean findLibrarySetById(int id) {
+		return librarySetBeanMapper.toFormBean(libraryMgtDAO.findLibrarySetById(id));
 	}
 
 	@Override
-	public void updateLibrarySetQuantities(LibrarySetBean bean) {
-		libraryMgtDAO.updateLibrarySetQuantities(bean);
+	public void updateLibrarySetQuantities(LibrarySetFormBean bean) {
+		libraryMgtDAO.updateLibrarySetQuantities(librarySetBeanMapper.toBean(bean));
 	}
 
 	@Override
 	public OutputStream exportLibrary(int id) throws IOException {
-		return ExcelLibraryExporter.export(findLibraryById(id));
+//		return ExcelLibraryExporter.export(findLibraryById(id));
+		return null;
 	}
 }

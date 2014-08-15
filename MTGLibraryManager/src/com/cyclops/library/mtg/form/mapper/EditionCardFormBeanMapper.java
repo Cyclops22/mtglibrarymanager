@@ -19,7 +19,7 @@ public class EditionCardFormBeanMapper extends AbstractFormBeanMapper<EditionCar
 			editionCard = new EditionCardBean();
 			
 			editionCard.setCard(cardFormBeanMapper.toBean(formBean.getCard()));
-			editionCard.setSets(new LinkedHashSet<>(setFormBeanMapper.toBean(formBean.getSets())));
+//			editionCard.setSets(new LinkedHashSet<>(setFormBeanMapper.toBean(formBean.getSets())));
 		}
 		
 		return editionCard;
@@ -33,7 +33,7 @@ public class EditionCardFormBeanMapper extends AbstractFormBeanMapper<EditionCar
 			editionCardForm = new EditionCardFormBean();
 			
 			editionCardForm.setCard(cardFormBeanMapper.toFormBean(bean.getCard()));
-			editionCardForm.setSets(setFormBeanMapper.toFormBean(new ArrayList<>(bean.getSets())));
+//			editionCardForm.setSets(setFormBeanMapper.toFormBean(new ArrayList<>(bean.getSets())));
 		}
 		
 		return editionCardForm;

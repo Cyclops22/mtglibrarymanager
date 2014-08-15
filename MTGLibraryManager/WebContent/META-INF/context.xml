@@ -1,6 +1,6 @@
 <Context>
 	<Resource name="jdbc/mtgLibraryManager_DB" auth="Container"
 		type="javax.sql.DataSource" driverClassName="com.mysql.jdbc.Driver"
-		url="jdbc:mysql://localhost:3306/MTGLibraryManager" username="springUser"
+		url="jdbc:mysql://localhost:3306/MTGLibraryManager2" username="springUser"
 		password="springUser" maxActive="30" maxIdle="10" />
 </Context>

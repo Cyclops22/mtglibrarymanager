@@ -1,21 +1,28 @@
 package com.cyclops.library.mtg.service;
 
-import java.io.IOException;
 import java.util.List;
 
-import com.cyclops.library.mtg.domain.SetBean;
-import com.cyclops.library.mtg.service.bean.EditionCardBean;
+import com.cyclops.library.mtg.form.bean.ImportSetFormBean;
+import com.cyclops.library.mtg.form.bean.SetFormBean;
 
 public interface SetMgtService {
-
-	void addMTGSet(SetBean mtgSetBean);
 	
-	List<SetBean> findAll();
+	List<SetFormBean> findAll();
+	
+//	void addSet(SetBeanOld mtgSetBean);
+	
+	void addSets(List<ImportSetFormBean> importSetFormBeans);
 
-	List<SetBean> retrieveAllSets() throws IOException;
+	List<ImportSetFormBean> getAvailableSets();
 
-	void update(int id, SetBean mtgSetBean);
+	SetFormBean getSetByCode(String code);
 
-	List<EditionCardBean> getAllCards();
+//	List<SetBeanOld> findAll();
+//
+//	List<SetBeanOld> retrieveAllSets() throws IOException;
+//
+//	void update(int id, SetBeanOld mtgSetBean);
+//
+//	List<EditionCardBean> getAllCards();
 
 }

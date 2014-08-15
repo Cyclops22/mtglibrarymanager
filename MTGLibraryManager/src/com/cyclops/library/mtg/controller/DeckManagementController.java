@@ -82,12 +82,12 @@ public class DeckManagementController {
 	@RequestMapping(value = "/deckmgt/{deckId}/editDeck", method = RequestMethod.GET)
 	public String editDeckNavigation(@PathVariable("deckId") String deckId, Model model) {
 		
-		DeckFormBean form = deckFormBeanMapper.toFormBean(deckMgtService.findById(Integer.parseInt(deckId)));
-		
-		List<EditionCardFormBean> editionsCards = editionCardFormBeanMapper.toFormBean(setMgtService.getAllCards());
-		
-		model.addAttribute("form", form);
-		model.addAttribute("cards", editionsCards);
+//		DeckFormBean form = deckFormBeanMapper.toFormBean(deckMgtService.findById(Integer.parseInt(deckId)));
+//		
+//		List<EditionCardFormBean> editionsCards = editionCardFormBeanMapper.toFormBean(setMgtService.getAllCards());
+//		
+//		model.addAttribute("form", form);
+//		model.addAttribute("cards", editionsCards);
 		
 		return "deckmgt/editDeck";
 	}

@@ -14,7 +14,7 @@ public interface LibraryMgtDAO {
 
 	LibraryBean findLibraryById(int id);
 
-	SetBean findSetById(int id);
+//	SetBean findSetById(int id);
 
 	void addSetToLibrary(int libraryId, int setId);
 

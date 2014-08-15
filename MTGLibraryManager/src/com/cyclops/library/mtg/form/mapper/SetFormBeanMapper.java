@@ -1,17 +1,18 @@
 package com.cyclops.library.mtg.form.mapper;
 
-import java.text.ParseException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Component;
 
-import org.apache.commons.lang3.StringUtils;
-
-import com.cyclops.library.mtg.Constants;
 import com.cyclops.library.mtg.domain.SetBean;
-import com.cyclops.library.mtg.domain.SetCategory;
 import com.cyclops.library.mtg.form.bean.SetFormBean;
 
+@Component
+@Qualifier("setFormBeanMapper")
 public class SetFormBeanMapper extends AbstractFormBeanMapper<SetBean, SetFormBean> {
 	
-	private CardFormBeanMapper cardFormBeanMapper = new CardFormBeanMapper();
+	@Autowired
+	private CardFormBeanMapper cardFormBeanMapper;
 
 	@Override
 	public SetBean toBean(SetFormBean formBean) {
@@ -20,24 +21,16 @@ public class SetFormBeanMapper extends AbstractFormBeanMapper<SetBean, SetFormBe
 		if (formBean != null) {
 			set = new SetBean();
 			
-			set.setAbbreviation(formBean.getAbbreviation());
-			set.setCategory(SetCategory.valueOf(formBean.getCategory()));
+			set.setBlock(formBean.getBlock());
+			set.setBorder(formBean.getBorder());
+			set.setCards(cardFormBeanMapper.toBean(formBean.getCards()));
+			set.setCode(formBean.getCode());
+			set.setGathererCode(formBean.getGathererCode());
 			set.setId(formBean.getId());
-			set.setLogoUrl(formBean.getImageUrl());
-			set.setLanguage(formBean.getLanguage());
 			set.setName(formBean.getName());
-			set.setUrl(formBean.getUrl());
-			
-			if (StringUtils.isNotBlank(formBean.getReleaseDate())) {
-				try {
-					set.setReleaseDate(Constants.RELEASE_DATE_DATEFORMAT.parse(formBean.getReleaseDate()));
-					
-				} catch (ParseException e) {
-					e.printStackTrace();
-				}	
-			}
-			
-			set.setCards(cardFormBeanMapper.toBean(formBean.getCards()));			
+			set.setOldCode(formBean.getOldCode());
+			set.setReleaseDate(formBean.getReleaseDate());
+			set.setSetType(formBean.getSetType());
 		}
 		
 		return set;
@@ -50,19 +43,16 @@ public class SetFormBeanMapper extends AbstractFormBeanMapper<SetBean, SetFormBe
 		if (bean != null) {
 			setForm = new SetFormBean();
 			
-			setForm.setAbbreviation(bean.getAbbreviation());
-			setForm.setCategory(bean.getCategory().toString());
-			setForm.setId(bean.getId());
-			setForm.setImageUrl(bean.getLogoUrl());
-			setForm.setLanguage(bean.getLanguage());
-			setForm.setName(bean.getName());
-			setForm.setUrl(bean.getUrl());
-			
-			if (bean.getReleaseDate() != null) {
-				setForm.setReleaseDate(Constants.RELEASE_DATE_DATEFORMAT.format(bean.getReleaseDate()));
-			}
-			
+			setForm.setBlock(bean.getBlock());
+			setForm.setBorder(bean.getBorder());
 			setForm.setCards(cardFormBeanMapper.toFormBean(bean.getCards()));
+			setForm.setCode(bean.getCode());
+			setForm.setGathererCode(bean.getGathererCode());
+			setForm.setId(bean.getId());
+			setForm.setName(bean.getName());
+			setForm.setOldCode(bean.getOldCode());
+			setForm.setReleaseDate(bean.getReleaseDate());
+			setForm.setSetType(bean.getSetType());
 		}
 		
 		return setForm;

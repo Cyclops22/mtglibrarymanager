@@ -6,10 +6,16 @@
 <html>
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-	<link type="text/css" rel="stylesheet" href="<c:url value="/resources/css/style.css" />" />
 	<title>Create a new library</title>
+	
+	<script src="http://code.jquery.com/jquery-1.11.0.js"></script>
+	
+	<link type="text/css" rel="stylesheet" href="<c:url value="/resources/css/style.css" />" />
 </head>
 <body>
+	<img id="save" src="" alt="Save"/>
+	<img id="cancel" src="" alt="Cancel"/>
+		
 	<form:form commandName="form" action="createLibrary.html">
 		<table>
 			<tbody>
@@ -19,8 +25,20 @@
 				</tr>
 			</tbody>
 		</table>
-		
-		<input type="submit" value="Save" />
 	</form:form>
 </body>
+
+<script type="text/javascript">
+
+$(document).ready(function() {
+	$("img#save").click(function() {
+		$("form#form").submit();
+	});
+
+	$("img#cancel").click(function() {
+		window.location.href = "<c:url value='/librarymgt/manageLibraries.html' />";
+	});
+});
+
+</script>
 </html>

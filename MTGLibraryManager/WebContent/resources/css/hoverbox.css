@@ -1,0 +1,67 @@
+/*body
+{
+	background: #fff;
+	color: #777;
+	margin: 0 auto;
+	padding: 50px;
+	position: relative;
+	width: 620px;
+}
+*/
+
+/* =Hoverbox Code
+----------------------------------------------------------------------*/
+/*
+.hoverbox
+{
+	cursor: default;
+	list-style: none;
+}
+*/
+.hoverbox span.preview .preview {
+	display: none;
+}
+
+.hoverbox span.preview:hover .preview {
+	display: block;
+	position: absolute;
+	top: -25px;
+	left: 200px;
+	z-index: 1;
+}
+
+.hoverbox span.preview img {
+	/*
+	background: #fff;
+	border-color: #aaa #ccc #ddd #bbb;
+	border-style: solid;
+	border-width: 1px;
+	color: inherit;
+	*/
+	padding: 2px;
+	vertical-align: top;
+	width: 312px;
+	height: 415px;
+}
+
+
+.hoverbox td {
+	/*background: #eee;
+	border-color: #ddd #bbb #aaa #ccc;
+	border-style: solid;
+	border-width: 1px;
+	color: inherit;
+	display: inline;
+	float: left;
+	margin: 3px;
+	padding: 5px;*/
+	position: relative;
+}
+/*
+.hoverbox .preview
+{
+	border-color: #000;
+	width: 200px;
+	height: 150px;
+}
+*/

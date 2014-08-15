@@ -14,7 +14,7 @@ $( document ).ready(function() {
 		filterCards();
 	});
 
-	$("div#filter legend input:button[name='reversefilter']").click(function() {
+	$("div#filter legend img#reversefilter").click(function() {
 		$("div#filter input:checkbox").each(function() {
 			if (this.checked) {
 				$(this).prop("checked", false);
@@ -27,7 +27,7 @@ $( document ).ready(function() {
 		filterCards();
 	});
 
-	$("div#filter legend input:button[name='resetfilter']").click(function() {
+	$("div#filter legend img#resetfilter").click(function() {
 		$("div#filter input:checkbox").each(function() {
 			$(this).prop("checked", false);
 		});
@@ -71,7 +71,16 @@ function filterCards() {
 		var hideRow = false;
 		
 	    var lines = $("td", tr).map(function(index, td) {
-	        return $(td).text().trim();
+	    	var textValue = $(td).text();
+	    	
+	    	if ($(td).find("img").length) {
+	    		textValue = "";
+	    		$("img", $(td)).each(function() {
+	    			textValue += $(this).attr("alt");
+	    		});
+	    	}
+	    	
+	        return textValue.trim();
 	    });
 	    
 	    if (lines[cardNameColumnPos].match(filterCardNameRegEx) == null) {

@@ -54,15 +54,15 @@ public class ExcelLibraryExporter {
 					cardRow.createCell(1).setCellValue(referencedCard.getName());
 					
 					Hyperlink link = creationHelper.createHyperlink(Hyperlink.LINK_URL);
-				    link.setAddress(referencedCard.getUrl());
-				    cardRow.getCell(1).setHyperlink(link);
-				    cardRow.getCell(1).setCellStyle(hlinkStyle);
-					
-					cardRow.createCell(2).setCellValue(referencedCard.getType());
-					cardRow.createCell(3).setCellValue(referencedCard.getMana());
-					cardRow.createCell(4).setCellValue(referencedCard.getRarity());
-					cardRow.createCell(5).setCellValue(currLibrarySetBean.getReferencedSet().getName());
-					cardRow.createCell(6).setCellValue(currLibraryCardBean.getQuantity());
+//				    link.setAddress(referencedCard.getUrl());
+//				    cardRow.getCell(1).setHyperlink(link);
+//				    cardRow.getCell(1).setCellStyle(hlinkStyle);
+//					
+//					cardRow.createCell(2).setCellValue(referencedCard.getType());
+//					cardRow.createCell(3).setCellValue(referencedCard.getMana());
+//					cardRow.createCell(4).setCellValue(referencedCard.getRarity());
+//					cardRow.createCell(5).setCellValue(currLibrarySetBean.getReferencedSet().getName());
+//					cardRow.createCell(6).setCellValue(currLibraryCardBean.getQuantity());
 					
 					if (currLibraryCardBean.getFoilQuantity() > 0) {
 						cardRow.createCell(7).setCellValue(currLibraryCardBean.getFoilQuantity());

@@ -1,32 +1,23 @@
-package com.cyclops.library.mtg.form.bean;
+package com.cyclops.library.mtg.json.bean;
 
-import java.util.Date;
-import java.util.List;
-
-
-
-public class SetFormBean {
-
-	private int id;
+public class SetJsonBean {
 	private String name;
 	private String code;
 	private String gathererCode;
 	private String oldCode;
-	private Date releaseDate;
+	private String releaseDate;
 	private String border;
-	private String setType;
+	private String type;
 	private String block;
+	private String onlineOnly;
+	private Object[] booster;
+	private CardJsonBean[] cards;
 	
-	private boolean selected;
+	public SetJsonBean() {}
 	
-	private List<CardFormBean> cards;
-
-	public int getId() {
-		return id;
-	}
-
-	public void setId(int id) {
-		this.id = id;
+	@Override
+	public String toString() {
+		return name;
 	}
 
 	public String getName() {
@@ -61,11 +52,11 @@ public class SetFormBean {
 		this.oldCode = oldCode;
 	}
 
-	public Date getReleaseDate() {
+	public String getReleaseDate() {
 		return releaseDate;
 	}
 
-	public void setReleaseDate(Date releaseDate) {
+	public void setReleaseDate(String releaseDate) {
 		this.releaseDate = releaseDate;
 	}
 
@@ -77,12 +68,12 @@ public class SetFormBean {
 		this.border = border;
 	}
 
-	public String getSetType() {
-		return setType;
+	public String getType() {
+		return type;
 	}
 
-	public void setSetType(String setType) {
-		this.setType = setType;
+	public void setType(String type) {
+		this.type = type;
 	}
 
 	public String getBlock() {
@@ -93,19 +84,27 @@ public class SetFormBean {
 		this.block = block;
 	}
 
-	public List<CardFormBean> getCards() {
+	public String getOnlineOnly() {
+		return onlineOnly;
+	}
+
+	public void setOnlineOnly(String onlineOnly) {
+		this.onlineOnly = onlineOnly;
+	}
+
+	public Object[] getBooster() {
+		return booster;
+	}
+
+	public void setBooster(Object[] booster) {
+		this.booster = booster;
+	}
+
+	public CardJsonBean[] getCards() {
 		return cards;
 	}
 
-	public void setCards(List<CardFormBean> cards) {
+	public void setCards(CardJsonBean[] cards) {
 		this.cards = cards;
-	}
-
-	public boolean isSelected() {
-		return selected;
-	}
-
-	public void setSelected(boolean selected) {
-		this.selected = selected;
 	}
 }

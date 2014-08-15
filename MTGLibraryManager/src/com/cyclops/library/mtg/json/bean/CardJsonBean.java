@@ -1,80 +1,35 @@
-package com.cyclops.library.mtg.domain;
+package com.cyclops.library.mtg.json.bean;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-
-@Entity
-public class CardBean {
-
-	@Id
-	@GeneratedValue
-	private int id;
-	
+public class CardJsonBean {
 	private String layout;
-	
 	private String name;
-	
-	private String names;
-	
+	private String[] names;
 	private String manaCost;
-	
 	private String cmc;
-	
-	private String colors;
-	
+	private String[] colors;
 	private String type;
-	
-	private String supertypes;
-	
-	private String types;
-	
-	private String subtypes;
-	
+	private String[] supertypes;
+	private String[] types;
+	private String[] subtypes;
 	private String rarity;
-	
-	@Column(length=550)
 	private String text;
-	
-	@Column(length=550)
 	private String flavor;
-	
 	private String artist;
-	
 	private String number;
-	
 	private String power;
-	
 	private String toughness;
-	
 	private String loyalty;
-	
 	private String multiverseid;
-	
-	private String variations;
-	
+	private String[] variations;
 	private String imageName;
-	
 	private String watermark;
-	
 	private String border;
-	
-	private boolean timeshifted;
-	
+	private String timeshifted;
 	private String hand;
-	
 	private String life;
-	
-	private boolean reserved;
+	private String reserved;
 
-	public int getId() {
-		return id;
-	}
-
-	public void setId(int id) {
-		this.id = id;
-	}
+	public CardJsonBean() {}
 
 	public String getLayout() {
 		return layout;
@@ -92,11 +47,11 @@ public class CardBean {
 		this.name = name;
 	}
 
-	public String getNames() {
+	public String[] getNames() {
 		return names;
 	}
 
-	public void setNames(String names) {
+	public void setNames(String[] names) {
 		this.names = names;
 	}
 
@@ -116,11 +71,11 @@ public class CardBean {
 		this.cmc = cmc;
 	}
 
-	public String getColors() {
+	public String[] getColors() {
 		return colors;
 	}
 
-	public void setColors(String colors) {
+	public void setColors(String[] colors) {
 		this.colors = colors;
 	}
 
@@ -132,27 +87,27 @@ public class CardBean {
 		this.type = type;
 	}
 
-	public String getSupertypes() {
+	public String[] getSupertypes() {
 		return supertypes;
 	}
 
-	public void setSupertypes(String supertypes) {
+	public void setSupertypes(String[] supertypes) {
 		this.supertypes = supertypes;
 	}
 
-	public String getTypes() {
+	public String[] getTypes() {
 		return types;
 	}
 
-	public void setTypes(String types) {
+	public void setTypes(String[] types) {
 		this.types = types;
 	}
 
-	public String getSubtypes() {
+	public String[] getSubtypes() {
 		return subtypes;
 	}
 
-	public void setSubtypes(String subtypes) {
+	public void setSubtypes(String[] subtypes) {
 		this.subtypes = subtypes;
 	}
 
@@ -228,11 +183,11 @@ public class CardBean {
 		this.multiverseid = multiverseid;
 	}
 
-	public String getVariations() {
+	public String[] getVariations() {
 		return variations;
 	}
 
-	public void setVariations(String variations) {
+	public void setVariations(String[] variations) {
 		this.variations = variations;
 	}
 
@@ -260,11 +215,11 @@ public class CardBean {
 		this.border = border;
 	}
 
-	public boolean isTimeshifted() {
+	public String getTimeshifted() {
 		return timeshifted;
 	}
 
-	public void setTimeshifted(boolean timeshifted) {
+	public void setTimeshifted(String timeshifted) {
 		this.timeshifted = timeshifted;
 	}
 
@@ -284,11 +239,11 @@ public class CardBean {
 		this.life = life;
 	}
 
-	public boolean isReserved() {
+	public String getReserved() {
 		return reserved;
 	}
 
-	public void setReserved(boolean reserved) {
+	public void setReserved(String reserved) {
 		this.reserved = reserved;
 	}
 }

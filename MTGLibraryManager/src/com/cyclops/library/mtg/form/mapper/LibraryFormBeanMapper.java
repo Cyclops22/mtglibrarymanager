@@ -1,14 +1,16 @@
 package com.cyclops.library.mtg.form.mapper;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.cyclops.library.mtg.domain.LibraryBean;
 import com.cyclops.library.mtg.form.bean.LibraryFormBean;
 
-@Component
+@Component("libraryFormBeanMapper")
 public class LibraryFormBeanMapper extends AbstractFormBeanMapper<LibraryBean, LibraryFormBean> {
 
-	private LibrarySetFormBeanMapper librarySetFormBeanMapper = new LibrarySetFormBeanMapper();
+	@Autowired
+	private LibrarySetFormBeanMapper librarySetFormBeanMapper;
 	
 	@Override
 	public LibraryBean toBean(LibraryFormBean formBean) {

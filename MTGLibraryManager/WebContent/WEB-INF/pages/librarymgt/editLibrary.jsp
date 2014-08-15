@@ -7,19 +7,22 @@
 <html>
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-	<link type="text/css" rel="stylesheet" href="<c:url value="/resources/css/style.css" />" />
-	<script src="http://code.jquery.com/jquery-1.11.0.js"></script>
-	
 	<title>Managing ${form.name}</title>
+	
+	<script src="http://code.jquery.com/jquery-1.11.0.js"></script>
+	<script src="//code.jquery.com/ui/1.11.0/jquery-ui.js"></script>
+	
+	<link type="text/css" rel="stylesheet" href="<c:url value="/resources/css/style.css" />" />
+	<link rel="stylesheet" href="http://code.jquery.com/ui/1.11.0/themes/smoothness/jquery-ui.css">
 </head>
 <body>
 	<fmt:setBundle basename="com.cyclops.library.mtg.resources.resources" var="bundle"/>
 	
-	<form:form commandName="form" action="submitEditLibrary.html">
-		<input type="submit" name="AddSets" value="Add sets"/>
-		<input type="submit" name="RemoveSelected" value="Remove selected"/>
-		<input type="button" value="Back" onclick="location.href='../manageLibraries.html'"/>
-
+	<img id="add" src="" alt="Add sets"/>
+	<img id="remove" src="" alt="Remove selected"/>
+	<img id="back" src="" alt="Back"/>
+	
+	<form:form commandName="form" action="removeSets.html">
 		<table class="listing">
 			<thead>
 				<tr>
@@ -30,20 +33,7 @@
 				</tr>
 			</thead>
 			<tbody>
-				<c:set var="lastGroup" value="" />
-				<c:set var="total" value="0" />
-				
 				<c:forEach var="currSet" items="${form.sets}" varStatus="status">
-					<c:if test="${currSet.referencedSet.category != lastGroup}">
-						<tr>
-							<td colspan="4">
-								<h2><fmt:message key="expansion.detail.description.${currSet.referencedSet.category}" bundle="${bundle}"/></h2>
-							</td>
-						</tr>
-					</c:if>
-					
-					<c:set var="lastGroup" value="${currSet.referencedSet.category}" />
-				
 					<tr class="${status.index % 2 == 0 ? 'even' : 'odd'}">
 						<td>
 							<form:checkbox path="sets[${status.index}].selected"/>
@@ -54,11 +44,10 @@
 							<a href="${currSet.id}/editSetLibrary.html"><c:out value="${currSet.referencedSet.name}"/></a>
 						</td>
 						<td>
-							<img src='<c:out value="${currSet.referencedSet.imageUrl}"/>'/>
+							<img src="http://mtgimage.com/symbol/set/${currSet.referencedSet.code}/c/16.png"/>
 						</td>
-						<td>
-							<c:out value="${currSet.numberOfCards}" />
-							<c:set var="total" value="${total + currSet.numberOfCards}" />
+						<td tdtype="total">
+							${currSet.numberOfCards}
 						</td>
 					</tr>
 				</c:forEach>
@@ -68,12 +57,87 @@
 		<form:hidden path="id" />
 		<form:hidden path="name" />
 	</form:form>
+	
+	<div id="addSetsDlg" title="Add sets to library" style="display: none;">
+		<form:form commandName="setsForm" action="addSets.html">
+			<div>Select sets to add</div>
+		  	
+		  	<table>
+				<thead>
+					<tr>
+						<th>&nbsp;</th>
+						<th>Name</th>
+					</tr>
+				</thead>
+				<tbody>
+					<c:forEach var="currSet" items="${setsForm.sets}" varStatus="status">
+						<tr>
+							<td>
+								<form:hidden path="sets[${status.index}].id"/>
+							
+								<form:checkbox path="sets[${status.index}].selected"/>
+							</td>
+							<td><c:out value="${currSet.name}"/></td>
+						</tr>
+					</c:forEach>
+				</tbody>
+			</table>
+		</form:form>
+	</div>
 </body>
 
 <script type="text/javascript">
 
 $( document ).ready(function() {
-	$('th#total').text(${total});
+	$("#addSetsDlg").dialog({
+	    autoOpen: false,
+	    modal: true,
+	    resizable: false,
+		height:768,
+	    width: 720,
+	    close: function() {
+	    	$("tbody", $(this)).empty();
+		},
+	    buttons: [ 
+	      	{
+				text: "Add",
+				width: 95,
+				click: function() {
+					$('form#setsForm').submit();
+				}
+	      	},
+			{
+				text: "Cancel",
+				width: 95,
+				click: function() {
+					$(this).dialog("close");
+				}
+			}
+		]
+ 	});
+
+	var bigTotal = 0;
+	$("td[tdtype*='total']").each(function() {
+	    var value = $(this).text();
+	    
+	    // add only if the value is number
+	    if(!isNaN(value) && value.length != 0) {
+	        bigTotal += parseInt(value);
+	    }
+	});
+	$('th#total').text(bigTotal);
+
+	$("img#add").click(function() {
+		$("#addSetsDlg").dialog("open");
+	});
+
+	$("img#remove").click(function() {
+		$("form#form").submit();
+	});
+
+	$("img#back").click(function() {
+		window.location.href = "<c:url value='/librarymgt/manageLibraries.html' />";
+	});
 });
 
 </script>

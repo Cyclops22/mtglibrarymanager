@@ -10,4 +10,8 @@ public interface SetMgtDAO {
 	
 	public List<SetBean> findAll();
 
+	SetBean findByCode(String code);
+
+	SetBean findById(int setId);
+
 }

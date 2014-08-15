@@ -37,5 +37,17 @@ public class SetMgtDAOImpl implements SetMgtDAO {
 		Query query = em.createQuery("SELECT s FROM " + SetBean.class.getName() + " s");
 		return query.getResultList();
     }
-    
+	
+	@Override
+	public SetBean findByCode(String code) {
+		Query query = em.createQuery("SELECT s FROM " + SetBean.class.getName() + " s where s.code = :code");
+		query.setParameter("code", code);
+		
+		return (SetBean) query.getSingleResult();
+	}
+
+	@Override
+	public SetBean findById(int id) {
+		return em.find(SetBean.class, id);
+	}
 }
