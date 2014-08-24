@@ -22,7 +22,7 @@ public class CardNumberCardFormBeanComparator implements Comparator<CardFormBean
 		
 		CompareToBuilder ctb = new CompareToBuilder();
 		
-		Matcher o1Matcher = CARD_NUMBER_PATTERN.matcher(o1.getNumber());
+		Matcher o1Matcher = CARD_NUMBER_PATTERN.matcher(StringUtils.defaultString(o1.getNumber()));
 		if (o1Matcher.matches()) {
 			o1NumberPart = Integer.valueOf(o1Matcher.group(1));
 			
@@ -31,7 +31,7 @@ public class CardNumberCardFormBeanComparator implements Comparator<CardFormBean
 			}
 		}
 		
-		Matcher o2Matcher = CARD_NUMBER_PATTERN.matcher(o2.getNumber());
+		Matcher o2Matcher = CARD_NUMBER_PATTERN.matcher(StringUtils.defaultString(o2.getNumber()));
 		if (o2Matcher.matches()) {
 			o2NumberPart = Integer.valueOf(o2Matcher.group(1));
 			

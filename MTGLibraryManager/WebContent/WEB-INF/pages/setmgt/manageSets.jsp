@@ -29,6 +29,7 @@
 				<th>&nbsp;</th>
 				<th>Release date</th>
 				<th>Number of cards</th>
+				<th>Block</th>
 			</tr>
 		</thead>
 		<tbody>
@@ -38,6 +39,7 @@
 					<td><img src="http://mtgimage.com/symbol/set/${currSet.code}/c/16.png"/></td>
 					<td><c:out value="${currSet.releaseDate}"/></td>
 					<td>${fn:length(currSet.cards)}</td>
+					<td><c:out value="${currSet.block}"/></td>
 				</tr>
 			</c:forEach>
 		</tbody>

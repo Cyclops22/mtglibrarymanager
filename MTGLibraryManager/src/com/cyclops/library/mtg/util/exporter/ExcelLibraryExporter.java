@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 
 import org.apache.commons.lang.math.NumberUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.CellStyle;
@@ -54,15 +55,25 @@ public class ExcelLibraryExporter {
 					cardRow.createCell(1).setCellValue(referencedCard.getName());
 					
 					Hyperlink link = creationHelper.createHyperlink(Hyperlink.LINK_URL);
-//				    link.setAddress(referencedCard.getUrl());
-//				    cardRow.getCell(1).setHyperlink(link);
-//				    cardRow.getCell(1).setCellStyle(hlinkStyle);
-//					
-//					cardRow.createCell(2).setCellValue(referencedCard.getType());
-//					cardRow.createCell(3).setCellValue(referencedCard.getMana());
-//					cardRow.createCell(4).setCellValue(referencedCard.getRarity());
-//					cardRow.createCell(5).setCellValue(currLibrarySetBean.getReferencedSet().getName());
-//					cardRow.createCell(6).setCellValue(currLibraryCardBean.getQuantity());
+					
+					String code = null;
+					if (StringUtils.isBlank(currLibrarySetBean.getReferencedSet().getCode())) {
+						code = StringUtils.lowerCase(currLibrarySetBean.getReferencedSet().getGathererCode());
+						
+					} else {
+						code = StringUtils.lowerCase(currLibrarySetBean.getReferencedSet().getCode());
+						
+					}
+					
+				    link.setAddress("http://magiccards.info/" + code + "/en/" + referencedCard.getNumber() + ".html");
+				    cardRow.getCell(1).setHyperlink(link);
+				    cardRow.getCell(1).setCellStyle(hlinkStyle);
+					
+					cardRow.createCell(2).setCellValue(referencedCard.getType());
+					cardRow.createCell(3).setCellValue(referencedCard.getManaCost());
+					cardRow.createCell(4).setCellValue(referencedCard.getRarity());
+					cardRow.createCell(5).setCellValue(currLibrarySetBean.getReferencedSet().getName());
+					cardRow.createCell(6).setCellValue(currLibraryCardBean.getQuantity());
 					
 					if (currLibraryCardBean.getFoilQuantity() > 0) {
 						cardRow.createCell(7).setCellValue(currLibraryCardBean.getFoilQuantity());

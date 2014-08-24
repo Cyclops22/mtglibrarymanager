@@ -1,9 +1,9 @@
 package com.cyclops.library.mtg.service;
 
 import java.io.IOException;
-import java.io.OutputStream;
 import java.util.List;
 
+import com.cyclops.library.mtg.bean.ExportedLibraryBean;
 import com.cyclops.library.mtg.form.bean.LibraryFormBean;
 import com.cyclops.library.mtg.form.bean.LibrarySetFormBean;
 
@@ -21,7 +21,7 @@ public interface LibraryMgtService {
 
 	LibrarySetFormBean findLibrarySetById(int id);
 
-	OutputStream exportLibrary(int id) throws IOException;
+	ExportedLibraryBean exportLibrary(int id) throws IOException;
 
 	void updateLibrarySetQuantities(LibrarySetFormBean bean);
 }

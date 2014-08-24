@@ -2,8 +2,6 @@ package com.cyclops.library.mtg.controller;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -27,6 +25,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.cyclops.library.mtg.bean.ExportedLibraryBean;
 import com.cyclops.library.mtg.comparator.CardNumberLibraryCardFormBeanComparator;
 import com.cyclops.library.mtg.comparator.ReleaseDateLibrarySetFormBeanComparator;
 import com.cyclops.library.mtg.comparator.ReleaseDateSetFormBeanComparator;
@@ -177,14 +176,14 @@ public class LibraryManagementController {
 	@RequestMapping(value = "/librarymgt/{libraryId}/exportlibrary", method = RequestMethod.GET)
 	public void exportLibrary(@PathVariable("libraryId") String libraryId, HttpServletResponse res) {
 		try {
-			OutputStream os = libraryMgtService.exportLibrary(Integer.parseInt(libraryId));
+			ExportedLibraryBean exportedLibraryBean = libraryMgtService.exportLibrary(Integer.parseInt(libraryId));
 			
-			ByteArrayOutputStream baos = (ByteArrayOutputStream) os;
+			ByteArrayOutputStream baos = (ByteArrayOutputStream) exportedLibraryBean.getLibraryOutputStream();
 			byte[] baosArray = baos.toByteArray();
 			
 			res.setContentType("application/xls");
 	        res.setContentLength(baosArray.length);
-	        res.setHeader("Content-Disposition", "attachment; filename=Library.xls");
+	        res.setHeader("Content-Disposition", "attachment; filename=" + exportedLibraryBean.getLibraryName() + ".xls");
 			
 			IOUtils.write(baosArray, res.getOutputStream());
 			

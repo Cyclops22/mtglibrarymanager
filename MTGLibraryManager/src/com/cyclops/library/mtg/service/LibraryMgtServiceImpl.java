@@ -9,11 +9,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.cyclops.library.mtg.bean.ExportedLibraryBean;
 import com.cyclops.library.mtg.form.bean.LibraryFormBean;
 import com.cyclops.library.mtg.form.bean.LibrarySetFormBean;
 import com.cyclops.library.mtg.form.mapper.LibraryFormBeanMapper;
 import com.cyclops.library.mtg.form.mapper.LibrarySetFormBeanMapper;
 import com.cyclops.library.mtg.repository.LibraryMgtDAO;
+import com.cyclops.library.mtg.util.exporter.ExcelLibraryExporter;
 
 @Service("libraryMgtService")
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
@@ -69,8 +71,10 @@ public class LibraryMgtServiceImpl implements LibraryMgtService {
 	}
 
 	@Override
-	public OutputStream exportLibrary(int id) throws IOException {
-//		return ExcelLibraryExporter.export(findLibraryById(id));
-		return null;
+	public ExportedLibraryBean exportLibrary(int id) throws IOException {
+		LibraryFormBean libraryFormBean = findLibraryById(id);
+		OutputStream os = ExcelLibraryExporter.export(libraryBeanMapper.toBean(libraryFormBean));
+		
+		return new ExportedLibraryBean(libraryFormBean.getName(), os);
 	}
 }
