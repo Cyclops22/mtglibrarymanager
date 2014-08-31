@@ -33,7 +33,7 @@ public class SetManagementController {
 	}
 
 	@RequestMapping(value = "/setmgt/manageSets", method = RequestMethod.GET)
-	public String navigateToDisplaySets(Model model) {
+	public String navigateToManageSets(Model model) {
 		
 		List<SetFormBean> setFormBeans = setMgtService.findAll();
 		List<ImportSetFormBean> importSetFormBeans = setMgtService.getAvailableSets();

@@ -3,11 +3,14 @@ package com.cyclops.library.mtg.service;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.cyclops.library.mtg.domain.DeckBean;
+import com.cyclops.library.mtg.form.bean.DeckFormBean;
+import com.cyclops.library.mtg.form.mapper.DeckFormBeanMapper;
 
 @Service("deckMgtService")
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
@@ -23,6 +26,9 @@ public class DeckMgtServiceImpl implements DeckMgtService {
 //	
 //	@Autowired
 //	private WizardsParser wizardsParser;
+	
+	@Autowired
+	private DeckFormBeanMapper deckFormBeanMapper;
 
 //	@Autowired
 //	public DeckMgtServiceImpl(SetMgtDAO mtgLibraryDAO) {
@@ -57,16 +63,16 @@ public class DeckMgtServiceImpl implements DeckMgtService {
 	}
 	
 	@Override
-	public DeckBean findById(int id) {
-		DeckBean deckBean = new DeckBean();
+	public DeckFormBean findById(int id) {
+		DeckFormBean deckFormBean = new DeckFormBean();
 		
 		for (DeckBean currDeckBean : decks) {
 			if (currDeckBean.getId() == id) {
-				return currDeckBean;
+				return deckFormBeanMapper.toFormBean(currDeckBean);
 			}
 		}
 		
-		return deckBean;
+		return deckFormBean;
 	}
 	
 //	public List<SetBean> retrieveAllSets() throws IOException {

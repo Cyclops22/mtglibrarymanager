@@ -1,14 +1,20 @@
 package com.cyclops.library.mtg.service;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.cyclops.library.mtg.comparator.CardNameCardFormBeanComparator;
+import com.cyclops.library.mtg.comparator.ReleaseDateSetFormBeanComparator;
 import com.cyclops.library.mtg.domain.SetBean;
+import com.cyclops.library.mtg.form.bean.CardFormBean;
 import com.cyclops.library.mtg.form.bean.ImportSetFormBean;
 import com.cyclops.library.mtg.form.bean.SetFormBean;
 import com.cyclops.library.mtg.form.mapper.SetFormBeanMapper;
@@ -80,6 +86,25 @@ public class SetMgtServiceImpl implements SetMgtService {
 	@Override
 	public SetFormBean getSetByCode(String code) {
 		return setFormBeanMapper.toFormBean(mtgLibraryDAO.findByCode(code));
+	}
+	
+	@Override
+	public List<CardFormBean> findAllCards() {
+		Map<String, CardFormBean> cardsByName = new HashMap<>();
+		
+		List<SetFormBean> setFormBeans = findAll();
+		Collections.sort(setFormBeans, new ReleaseDateSetFormBeanComparator());
+		
+		for (SetFormBean currSetFormBean : setFormBeans) {
+			for (CardFormBean currCardFormBean : currSetFormBean.getCards()) {
+				cardsByName.put(currCardFormBean.getName(), currCardFormBean);
+			}
+		}
+		
+		List<CardFormBean> cardFormBeans = new ArrayList<>(cardsByName.values());
+		Collections.sort(cardFormBeans, new CardNameCardFormBeanComparator());
+		
+		return cardFormBeans;
 	}
 
 //	public List<SetBean> retrieveAllSets() throws IOException {

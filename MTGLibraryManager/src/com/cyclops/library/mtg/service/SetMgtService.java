@@ -2,6 +2,7 @@ package com.cyclops.library.mtg.service;
 
 import java.util.List;
 
+import com.cyclops.library.mtg.form.bean.CardFormBean;
 import com.cyclops.library.mtg.form.bean.ImportSetFormBean;
 import com.cyclops.library.mtg.form.bean.SetFormBean;
 
@@ -16,6 +17,8 @@ public interface SetMgtService {
 	List<ImportSetFormBean> getAvailableSets();
 
 	SetFormBean getSetByCode(String code);
+
+	List<CardFormBean> findAllCards();
 
 //	List<SetBeanOld> findAll();
 //

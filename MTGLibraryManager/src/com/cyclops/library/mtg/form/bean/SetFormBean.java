@@ -3,6 +3,9 @@ package com.cyclops.library.mtg.form.bean;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+
 
 
 public class SetFormBean {
@@ -20,6 +23,38 @@ public class SetFormBean {
 	private boolean selected;
 	
 	private List<CardFormBean> cards;
+	
+	@Override
+	public int hashCode() {
+		HashCodeBuilder  hcb = new HashCodeBuilder();
+		
+		hcb.append(name);
+		
+		return hcb.toHashCode();
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (obj == null) {
+			return false;
+		}
+		
+		if (!(obj instanceof SetFormBean)) {
+			return false;
+		}
+		
+		if (obj == this) {
+			return true;
+		}
+		
+		SetFormBean that = (SetFormBean) obj;
+		
+		EqualsBuilder eb = new EqualsBuilder();
+		
+		eb.append(name, that.getName());
+		
+		return eb.isEquals();
+	}
 
 	public int getId() {
 		return id;

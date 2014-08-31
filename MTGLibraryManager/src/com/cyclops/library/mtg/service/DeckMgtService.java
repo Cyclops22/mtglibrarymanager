@@ -3,6 +3,7 @@ package com.cyclops.library.mtg.service;
 import java.util.List;
 
 import com.cyclops.library.mtg.domain.DeckBean;
+import com.cyclops.library.mtg.form.bean.DeckFormBean;
 
 public interface DeckMgtService {
 	
@@ -10,6 +11,6 @@ public interface DeckMgtService {
 
 	List<DeckBean> findAll();
 	
-	DeckBean findById(int id);
+	DeckFormBean findById(int id);
 
 }

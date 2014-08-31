@@ -7,11 +7,16 @@
 <html>
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-	<link type="text/css" rel="stylesheet" href="<c:url value="/resources/css/style.css" />" />
 	
 	<script src="http://code.jquery.com/jquery-1.11.0.js"></script>
+	<script src="//code.jquery.com/ui/1.11.0/jquery-ui.js"></script>
+	
 	<script src="<c:url value="/resources/js/common.js" />"></script>
 	<script src="<c:url value="/resources/js/filtering.js" />"></script>
+	<script src="<c:url value="/resources/js/jquery.freezeheader.js" />"></script>
+	
+	<link rel="stylesheet" href="http://code.jquery.com/ui/1.11.0/themes/smoothness/jquery-ui.css">
+	<link type="text/css" rel="stylesheet" href="<c:url value="/resources/css/style.css" />" />
 	
 	<title>Managing ${form.name}</title>
 </head>
@@ -56,43 +61,98 @@
 
 		<h1><c:out value="${form.name}"/></h1>
 		
-		<div style="width: 1024px; background-color: green;">
+		<div id="allcards-div" style="background-color: green; float: left;">
 			<table class="listing">
 				<thead>
-					<tr>
-						<th style="width: 30%;">Card name</th>
-						<th style="width: 45%;">Type</th>
-						<th style="width: 10%;">Mana</th>
-						<th style="width: 15%;">Rarity</th>
+					<tr style="background: #fff url(<c:url value='/resources/img/bg-header-grid.png' />) bottom repeat-x;">
+					
+						<th>Card name</th>
+						<th>Type</th>
+						<th>Mana</th>
+						<th>Rarity</th>
+						<th>Quantities</th>
 					</tr>
 				</thead>
 				<tbody>
 					<c:forEach var="currCard" items="${cards}" varStatus="status">
 						<tr>
-							<td><c:out value="${currCard.card.name}"/></td>
-							<!--
+							<td class="cardname" multiverseId="${currCard.card.multiverseid}"><c:out value="${currCard.card.name}"/></td>
+							
+							<td><c:out value="${currCard.card.type}"/></td>
 							<td>
-								<c:forEach var="currSet" items="${currCard.sets}" varStatus="setStatus">
-									<c:out value="${currSet.abbreviation}"/><c:if test="${setStatus.index < fn:length(currCard.sets) - 1}">, </c:if>
+								<c:forEach var="cost" items="${currCard.card.manaCostElements}">
+									<img src="http://mtgimage.com/symbol/mana/${cost}/16.png" alt="${cost}" />
 								</c:forEach>
 							</td>
-							-->
-							<td><c:out value="${currCard.card.type}"/></td>
-							<td><c:out value="${currCard.card.mana}"/></td>
 							<td><c:out value="${currCard.card.rarity}"/></td>
+							<td quantity="${currCard.quantity + currCard.foilQuantity}">
+								<c:choose>
+									<c:when test="${currCard.foilQuantity > 0}">
+										<c:out value="${currCard.quantity}"/> / <c:out value="${currCard.foilQuantity}"/>
+									</c:when>
+									<c:otherwise>
+										<c:out value="${currCard.quantity}"/>
+									</c:otherwise>
+								</c:choose>
+								
+								<div class="qtydetail" style="display: none;">
+									<ul class="qtydetail">
+										<c:forEach var="entry" items="${currCard.libraryCardFormBeansBySet}">
+											<li>
+												<img src="http://mtgimage.com/symbol/set/${entry.key.code}/c/32.png"/>
+												<c:choose>
+													<c:when test="${entry.value.foilQuantity > 0}">
+														<c:out value="${entry.value.quantity}"/> / <c:out value="${entry.value.foilQuantity}"/>
+													</c:when>
+													<c:otherwise>
+														<c:out value="${entry.value.quantity}"/>
+													</c:otherwise>
+												</c:choose>
+											</li>
+										</c:forEach>
+									</ul>
+								</div>
+							</td>
 						</tr>
 					</c:forEach>
 				</tbody>
 			</table>
-		
-			
+		</div>
+		<div style="background-color: blue; float: left;">
+			<img id="cardimage" src="http://archive.wizards.com/global/images/cardback.jpg" width="230" height="317"/>
 		</div>
 	</form:form>
 </body>
 
 <script type="text/javascript">
 $( document ).ready(function() {
+	$('table.listing tbody tr').hover(function() {
+		$(this).toggleClass('hover');
+	});
+	
 	zebraRows($("table.listing tbody tr"));
+
+	$( document ).tooltip({
+		items: "table.listing tbody tr td[quantity]",
+		content: function() {
+			var element = $( this );
+
+			if (element.attr("quantity") > 0) {
+				return $("div.qtydetail", element).html();
+			}
+		}
+	});
+
+	$("td.cardname").mouseenter(function() {
+		$("#cardimage").attr("src", "http://mtgimage.com/multiverseid/" + $(this).attr('multiverseId') + ".jpg");
+	});
+
+	$("#allcards-div").height(function(index, height) {
+	    return window.innerHeight - $(this).offset().top;
+	});
+	
+	$("table.listing").freezeHeader({ 'height': '600px' });
+	
 });
 </script>
 </html>

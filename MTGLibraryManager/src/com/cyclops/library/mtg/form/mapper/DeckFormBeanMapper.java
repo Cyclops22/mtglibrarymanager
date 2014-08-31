@@ -1,8 +1,11 @@
 package com.cyclops.library.mtg.form.mapper;
 
+import org.springframework.stereotype.Component;
+
 import com.cyclops.library.mtg.domain.DeckBean;
 import com.cyclops.library.mtg.form.bean.DeckFormBean;
 
+@Component("deckFormBeanMapper")
 public class DeckFormBeanMapper extends AbstractFormBeanMapper<DeckBean, DeckFormBean> {
 	
 //	private CardFormBeanMapper cardFormBeanMapper = new CardFormBeanMapper();
