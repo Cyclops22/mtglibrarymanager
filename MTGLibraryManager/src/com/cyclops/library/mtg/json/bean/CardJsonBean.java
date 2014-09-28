@@ -28,6 +28,7 @@ public class CardJsonBean {
 	private String hand;
 	private String life;
 	private String reserved;
+	private String releaseDate;
 
 	public CardJsonBean() {}
 
@@ -245,5 +246,13 @@ public class CardJsonBean {
 
 	public void setReserved(String reserved) {
 		this.reserved = reserved;
+	}
+
+	public String getReleaseDate() {
+		return releaseDate;
+	}
+
+	public void setReleaseDate(String releaseDate) {
+		this.releaseDate = releaseDate;
 	}
 }

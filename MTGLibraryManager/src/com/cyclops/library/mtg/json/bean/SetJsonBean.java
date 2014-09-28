@@ -12,6 +12,7 @@ public class SetJsonBean {
 	private String onlineOnly;
 	private Object[] booster;
 	private CardJsonBean[] cards;
+	private Object magicRaritiesCodes;
 	
 	public SetJsonBean() {}
 	
@@ -106,5 +107,13 @@ public class SetJsonBean {
 
 	public void setCards(CardJsonBean[] cards) {
 		this.cards = cards;
+	}
+
+	public Object getMagicRaritiesCodes() {
+		return magicRaritiesCodes;
+	}
+
+	public void setMagicRaritiesCodes(Object magicRaritiesCodes) {
+		this.magicRaritiesCodes = magicRaritiesCodes;
 	}
 }
