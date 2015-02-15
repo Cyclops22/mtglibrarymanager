@@ -29,6 +29,7 @@ public class CardJsonBean {
 	private String life;
 	private String reserved;
 	private String releaseDate;
+	private String starter;
 
 	public CardJsonBean() {}
 
@@ -254,5 +255,13 @@ public class CardJsonBean {
 
 	public void setReleaseDate(String releaseDate) {
 		this.releaseDate = releaseDate;
+	}
+
+	public String getStarter() {
+		return starter;
+	}
+
+	public void setStarter(String starter) {
+		this.starter = starter;
 	}
 }
