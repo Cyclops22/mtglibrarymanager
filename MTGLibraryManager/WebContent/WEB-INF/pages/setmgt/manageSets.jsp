@@ -36,7 +36,20 @@
 			<c:forEach var="currSet" items="${setsForm.sets}" varStatus="status">
 				<tr>
 					<td><a href="${currSet.code}/displaySet.html"><c:out value="${currSet.name}"/></a></td>
-					<td><img src="http://mtgimage.com/symbol/set/${currSet.code}/c/16.png"/></td>
+					
+					<td>
+						<c:choose>
+						    <c:when test="${empty currSet.gathererCode}">
+						    	<img src="http://gatherer.wizards.com/Handlers/Image.ashx?type=symbol&set=${currSet.code}&size=small&rarity=C" alt="${currSet.name}"/>
+						        
+						    </c:when>
+						    <c:otherwise>
+						        <img src="http://gatherer.wizards.com/Handlers/Image.ashx?type=symbol&set=${currSet.gathererCode}&size=small&rarity=C" alt="${currSet.name}"/>
+						        
+						    </c:otherwise>
+						</c:choose>
+					</td>
+					
 					<td><c:out value="${currSet.releaseDate}"/></td>
 					<td>${fn:length(currSet.cards)}</td>
 					<td><c:out value="${currSet.block}"/></td>

@@ -113,7 +113,8 @@
 						</td>
 						<td>
 							<c:forEach var="cost" items="${currCard.referencedCard.manaCostElements}">
-								<img src="http://mtgimage.com/symbol/mana/${cost}/16.png" alt="${cost}" />
+								<img src="http://gatherer.wizards.com/Handlers/Image.ashx?size=small&name=${cost}&type=symbol" alt="${cost}" />
+								
 							</c:forEach>
 						</td>
 						<td>
@@ -155,7 +156,7 @@ $( document ).ready(function() {
 
 	$("span.preview").mouseenter(function() {
 		var multiverseId = $("img", $(this)).attr("multiverseid");
-		$("img", $(this)).attr("src", "http://mtgimage.com/multiverseid/" + multiverseId + ".jpg");
+		$("img", $(this)).attr("src", "http://gatherer.wizards.com/Handlers/Image.ashx?multiverseid=" + multiverseId + "&type=card");
 	});
 });
 

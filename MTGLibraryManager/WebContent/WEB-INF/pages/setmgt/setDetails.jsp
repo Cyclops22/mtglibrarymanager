@@ -33,7 +33,7 @@
 					<td>${card.type}</td>
 					<td>
 						<c:forEach var="cost" items="${card.manaCostElements}">
-							<img src="http://mtgimage.com/symbol/mana/${cost}/16.png" alt="${cost}" />
+							<img src="http://gatherer.wizards.com/Handlers/Image.ashx?size=small&name=${cost}&type=symbol" alt="${cost}" />
 						</c:forEach>
 					</td>
 					<td>${card.rarity}</td>

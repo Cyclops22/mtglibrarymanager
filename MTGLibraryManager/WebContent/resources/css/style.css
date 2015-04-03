@@ -3,7 +3,13 @@
     max-width: 800px;
 }
 
-.ui-tooltip ul.qtydetail {
+ul.qtydetail {
+	list-style-type: none;
+	margin: 0;
+	padding: 0; 
+}
+
+ul.nobullet {
 	list-style-type: none;
 	margin: 0;
 	padding: 0; 
@@ -38,6 +44,10 @@ table.listing tr.odd {
 
 table.listing tr.hover {
 	background-color: #a2bbfc;
+}
+
+table.listing tr.selected {
+	outline: blue solid 2px;
 }
 
 table.listing td {

@@ -44,7 +44,17 @@
 							<a href="${currSet.id}/editSetLibrary.html"><c:out value="${currSet.referencedSet.name}"/></a>
 						</td>
 						<td>
-							<img src="http://mtgimage.com/symbol/set/${currSet.referencedSet.code}/c/16.png"/>
+							<c:choose>
+							    <c:when test="${empty currSet.referencedSet.gathererCode}">
+							    	<img src="http://gatherer.wizards.com/Handlers/Image.ashx?type=symbol&set=${currSet.referencedSet.code}&size=small&rarity=C" alt="${currSet.referencedSet.name}"/>
+							        
+							    </c:when>
+							    <c:otherwise>
+							        <img src="http://gatherer.wizards.com/Handlers/Image.ashx?type=symbol&set=${currSet.referencedSet.gathererCode}&size=small&rarity=C" alt="${currSet.referencedSet.name}"/>
+							        
+							    </c:otherwise>
+							</c:choose>
+							
 						</td>
 						<td tdtype="total">
 							${currSet.numberOfCards}
