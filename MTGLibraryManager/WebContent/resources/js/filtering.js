@@ -14,19 +14,6 @@ $( document ).ready(function() {
 		filterCards();
 	});
 
-	$("div#filter legend img#reversefilter").click(function() {
-		$("div#filter input:checkbox").each(function() {
-			if (this.checked) {
-				$(this).prop("checked", false);
-				
-			} else {
-				$(this).prop("checked", true);
-			}
-		});
-
-		filterCards();
-	});
-
 	$("div#filter legend img#resetfilter").click(function() {
 		$("div#filter input:checkbox").each(function() {
 			$(this).prop("checked", false);
@@ -88,19 +75,19 @@ function filterCards() {
 		}
 	    
 	    if (!hideRow) {
-	    	if (lines[typeColumnPos].match(filterLandRegEx) != null) {
+	    	if (filterLandRegEx != "/^NO_FILTER$/" && lines[typeColumnPos].match(filterLandRegEx) == null) {
 		    	hideRow = true;
 			}
 	    }
 	    
 	    if (!hideRow) {
-	    	if (lines[manaColumnPos].match(filterColorRegEx) != null) {
+	    	if (filterColorRegEx != "/^NO_FILTER$/" && lines[manaColumnPos].match(filterColorRegEx) == null) {
 		    	hideRow = true;
 			}
 	    }
 	    
-	    if (!hideRow) {
-	    	if (jQuery.inArray(lines[rarityColumnPos], rarityFilterValuesArray) != -1) {
+	    if (!hideRow && rarityFilterValuesArray.length > 0) {
+	    	if (jQuery.inArray(lines[rarityColumnPos], rarityFilterValuesArray) == -1) {
 		    	hideRow = true;
 		    }
 	    }

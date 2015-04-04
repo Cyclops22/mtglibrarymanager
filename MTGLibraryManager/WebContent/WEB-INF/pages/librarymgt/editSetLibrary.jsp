@@ -23,7 +23,6 @@
 		<fieldset>
 			<legend>
 				Filters
-				<img id="reversefilter" src="" alt="Reverse"/>
 				<img id="resetfilter" src="" alt="Reset"/>
 			</legend>
 			<div id="rarityFilter" class="spacer">
@@ -46,7 +45,7 @@
 				</div>
 			</div>
 			<div id="quantityFilter" class="spacer">
-				<input type="checkbox" name="quantities">Without quantity</input>
+				<input type="checkbox" name="quantities">With quantity</input>
 			</div>
 		</fieldset>
 	</div>
