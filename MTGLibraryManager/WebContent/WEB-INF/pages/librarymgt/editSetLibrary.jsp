@@ -12,12 +12,15 @@
 	<script src="http://code.jquery.com/jquery-1.11.0.js"></script>
 	<script src="<c:url value="/resources/js/common.js" />"></script>
 	<script src="<c:url value="/resources/js/filtering.js" />"></script>
+	<script src="<c:url value="/resources/js/accounting.js" />"></script>
+	
 	
 	<link type="text/css" rel="stylesheet" href="<c:url value="/resources/css/style.css" />" />
 	<link type="text/css" rel="stylesheet" href="<c:url value="/resources/css/hoverbox.css" />" />
 </head>
 <body>
 	<fmt:setBundle basename="com.cyclops.library.mtg.resources.resources" var="bundle"/>
+	<fmt:setLocale value="fr_CA" scope="session"/>
 	
 	<div id="filter">
 		<fieldset>
@@ -54,15 +57,13 @@
 		<img id="save" src="" alt="Save"/>
 		<img id="cancel" src="" alt="Cancel"/>
 		
-		<!-- <input type="submit" value="Save" />
-		<input type="button" value="Cancel" onclick="location.href='../editLibrary.html'" /> -->
-		
 		<form:hidden path="id" />
 		
 		<table class="listing hoverbox">
 			<thead>
 				<tr>
-					<th colspan="7"><h1>${form.referencedSet.name}</h1></th>
+					<th colspan="9"><h1>${form.referencedSet.name}</h1></th>
+					<c:set var="currSetName" value="${form.referencedSet.name}" />
 				</tr>
 				<tr>
 					<th><fmt:message key="edit.set.library.form.label.card.number" bundle="${bundle}"/></th>
@@ -71,11 +72,17 @@
 					<th><fmt:message key="edit.set.library.form.label.card.cost" bundle="${bundle}"/></th>
 					<th><fmt:message key="edit.set.library.form.label.card.rarity" bundle="${bundle}"/></th>
 					<th colspan="2" class="center"><fmt:message key="edit.set.library.form.label.card.quantities" bundle="${bundle}"/></th>
+					<th colspan="2" class="center">
+						<fmt:message key="edit.set.library.form.label.card.prices" bundle="${bundle}"/>
+						<img id="price-fetching" src="<c:url value="/resources/img/spinning-gold-dollar-symbol.gif" />" style="display: none; height: 25%;"/>
+					</th>
 				</tr>
 				<tr>
 					<th colspan="5">&nbsp;</th>
-					<th class="center"><fmt:message key="edit.set.library.form.label.card.quantity.normal" bundle="${bundle}"/></th>
-					<th class="center"><fmt:message key="edit.set.library.form.label.card.quantity.foil" bundle="${bundle}"/></th>
+					<th class="center"><fmt:message key="edit.set.library.form.label.card.finish.normal" bundle="${bundle}"/></th>
+					<th class="center"><fmt:message key="edit.set.library.form.label.card.finish.foil" bundle="${bundle}"/></th>
+					<th class="center"><fmt:message key="edit.set.library.form.label.card.finish.normal" bundle="${bundle}"/></th>
+					<th class="center"><fmt:message key="edit.set.library.form.label.card.finish.foil" bundle="${bundle}"/></th>
 				</tr>
 			</thead>
 			<tbody>
@@ -129,6 +136,12 @@
 							<form:input path="cards[${status.index}].foilQuantity" id="FoilQty${currCard.id}" size="3"/>
 							<input type="button" value="+" onclick="addFoilQty(${currCard.id});"/>
 						</td>
+						<td style="text-align: right;">
+							&nbsp;
+						</td>
+						<td style="text-align: right;">
+							&nbsp;
+						</td>
 					</tr>
 				</c:forEach>
 			</tbody>
@@ -157,6 +170,45 @@ $( document ).ready(function() {
 		var multiverseId = $("img", $(this)).attr("multiverseid");
 		$("img", $(this)).attr("src", "http://gatherer.wizards.com/Handlers/Image.ashx?multiverseid=" + multiverseId + "&type=card");
 	});
+
+	$.ajax({
+        url : '<c:url value="/pricelistmgt/getPrices.html" />',
+        data : 'setName=${currSetName}',
+        beforeSend: function() {
+            $("img#price-fetching").show();
+        },
+        success : function(data) {
+        	var options = {
+       			symbol : "$",
+       			decimal : ",",
+       			thousand: " ",
+       			precision : 2,
+       			format: "%v %s"
+       		};
+			$("table.listing tbody tr").each(function () {
+				var cardName = $("td:nth-child(2)", $(this)).text().trim();
+				var priceObj = data[cardName];
+
+				if (typeof priceObj !== "undefined") {
+					var price = priceObj.price;
+					var foilPrice = priceObj.foilPrice;
+
+					var qty = $("input[id^='Qty']", $(this)).val();
+					var foilQty = $("input[id^='FoilQty']", $(this)).val();
+
+					if (qty > 0) {
+						$("td:nth-child(8)", $(this)).text(accounting.formatMoney(price, options));
+					}
+
+					if (foilQty > 0) {
+						$("td:nth-child(9)", $(this)).text(accounting.formatMoney(foilPrice, options));
+					}
+				}
+			});
+
+			$("img#price-fetching").hide();
+        }
+    });
 });
 
 function addQty(id) {

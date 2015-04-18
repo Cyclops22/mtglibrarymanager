@@ -1,11 +1,12 @@
 package com.cyclops.library.mtg.form.bean;
 
+import java.util.HashMap;
 import java.util.Map;
 
 public class LibraryCardSetFormBean {
 	
 	private CardFormBean card;
-	private Map<SetFormBean, LibraryCardFormBean> libraryCardFormBeansBySet;
+	private Map<SetFormBean, LibraryCardFormBean> libraryCardFormBeansBySet = new HashMap<>();
 	
 	public int getQuantity() {
 		int quantity = 0;
