@@ -173,7 +173,7 @@ $( document ).ready(function() {
 
 	$.ajax({
         url : '<c:url value="/pricelistmgt/getPrices.html" />',
-        data : 'setName=${currSetName}',
+        data : "setName=${currSetName}",
         beforeSend: function() {
             $("img#price-fetching").show();
         },
